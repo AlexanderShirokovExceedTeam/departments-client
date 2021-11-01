@@ -1,9 +1,21 @@
+import React from 'react';
+import {
+  Container,
+  Typography
+} from '@material-ui/core';
+import MainContainer from './components/main/mainContainer';
 import './App.scss';
 
 const App = () => {
   return (
-    <div className="App">
-    </div>
+    <Container className="App">
+      <Typography className='header' variant='h1'>
+        Department CMS
+      </Typography>
+      <MainContainer>
+        
+      </MainContainer>
+    </Container>
   );
 }
 
