@@ -1,4 +1,5 @@
 import React from 'react';
+import { useLocation } from 'react-router-dom';
 import {
   Container,
   Typography,
@@ -6,7 +7,8 @@ import {
 } from '@mui/material';
 import './contentHeader.scss';
 
-const ContentHeader = ({ routeIsEmployee }) => {
+const ContentHeader = () => {
+  const location = useLocation();
 
   const onClickAddHandler = () => {
 
@@ -16,7 +18,7 @@ const ContentHeader = ({ routeIsEmployee }) => {
     <Container className="content">
       <Container className="content-header">
         <Typography variant='h5'>
-          {routeIsEmployee ? 'Employee' : 'Departments'}
+          {location.pathname.includes('/departments') ? 'Departments' : 'Employee'}
         </Typography>
         <Button
           variant="contained"
