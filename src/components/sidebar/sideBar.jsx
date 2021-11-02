@@ -1,13 +1,20 @@
+import React from 'react';
 import { Switch, Route, Redirect, Link } from 'react-router-dom';
-import { Container } from '@material-ui/core';
+import { Container } from '@mui/material';
 import './sideBar.scss';
 
-const SideBar = () => {
+const SideBar = ({ setRouteIsEmployee }) => {
 
   return (
     <Container className="sidebar">
-      <Link to="/departments">Departments</Link>
-      <Link to="/employee">Employee</Link>
+      <Link        
+        to="/departments"
+        onClick={() => setRouteIsEmployee(false)}
+      >Departments</Link>
+      <Link
+        to="/employee"
+        onClick={() => setRouteIsEmployee(true)}
+      >Employee</Link>
     </Container>
   )
 }

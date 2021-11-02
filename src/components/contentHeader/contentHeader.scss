@@ -1,0 +1,11 @@
+.content-header.MuiContainer-root {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 1% 2%;
+  border-bottom: 2px solid lightgrey;
+}
+
+.content.MuiContainer-root {
+  padding: 0;
+}

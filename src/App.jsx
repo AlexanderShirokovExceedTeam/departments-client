@@ -2,7 +2,7 @@ import React from 'react';
 import {
   Container,
   Typography
-} from '@material-ui/core';
+} from '@mui/material';
 import MainContainer from './components/main/mainContainer';
 import './App.scss';
 
