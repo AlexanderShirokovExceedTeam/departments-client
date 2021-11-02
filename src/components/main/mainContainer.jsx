@@ -1,16 +1,31 @@
-import React from 'react';
-import { Switch, Route, Redirect } from 'react-router-dom';
-import { Container, Typography } from '@mui/material';
+import React, { useState } from 'react';
+import { Container } from '@mui/material';
 import SideBar from '../sidebar/sideBar';
 import ContentHeader from '../contentHeader/contentHeader';
+import ModalAddEdit from '../modalAddEdit/modalAddEdit';
 import './mainContainer.scss';
 
-const MainContainer = () => {
+const MainContainer = ({ entity }) => {
+  const [openModal, setOpenModal] = useState(false);
+
+  const okHandler = () => {
+    setOpenModal(false);
+  }
 
   return (
     <Container className="main-container">
       <SideBar />
-      <ContentHeader />
+      <ContentHeader
+        openModal={() => setOpenModal(true)}
+        entity={entity}
+      />
+      <ModalAddEdit
+        openModal={openModal}
+        closeHandler={() => setOpenModal(false)}
+        okHandler={() => okHandler()}
+        modalAction='Create'
+        entity={entity}
+      />
     </Container>
   )
 }

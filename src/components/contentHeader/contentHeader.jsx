@@ -7,23 +7,17 @@ import {
 } from '@mui/material';
 import './contentHeader.scss';
 
-const ContentHeader = () => {
-  const location = useLocation();
-
-  const onClickAddHandler = () => {
-
-  }
-
+const ContentHeader = ({ openModal, entity }) => {
   return (
     <Container className="content">
       <Container className="content-header">
         <Typography variant='h5'>
-          {location.pathname.includes('/departments') ? 'Departments' : 'Employee'}
+          {entity}
         </Typography>
         <Button
           variant="contained"
           color="primary"
-          onClick={() => onClickAddHandler()}
+          onClick={openModal}
         >
           Add
         </Button>

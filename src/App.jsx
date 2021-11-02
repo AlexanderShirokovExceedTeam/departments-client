@@ -1,5 +1,10 @@
 import React from 'react';
 import {
+  Switch,
+  Route,
+  Redirect
+} from 'react-router-dom';
+import {
   Container,
   Typography
 } from '@mui/material';
@@ -12,9 +17,11 @@ const App = () => {
       <Typography className='header' variant='h1'>
         Department CMS
       </Typography>
-      <MainContainer>
-        
-      </MainContainer>
+      <Switch>
+        <Route path='/departments' render={() => <MainContainer entity='Departments'/>} />
+        <Route path='/employee' render={() => <MainContainer entity='Employee'/>} />
+        <Redirect from='/' to='departments'/>
+      </Switch>
     </Container>
   );
 }
