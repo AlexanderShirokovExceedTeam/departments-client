@@ -8,7 +8,7 @@ import {
   Container,
   Typography
 } from '@mui/material';
-import MainContainer from './components/main/mainContainer';
+import MainContainer from './components/mainContainer/mainContainer';
 import './App.scss';
 
 const App = () => {
