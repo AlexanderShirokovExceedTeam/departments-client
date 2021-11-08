@@ -1,0 +1,13 @@
+.render-entity.MuiContainer-root {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  // justify-content: space-between;
+}
+
+.department.MuiContainer-root,
+.employee.MuiContainer-root {
+  border: 2px solid lightgrey;
+  margin: 2px;
+  width: 24%;
+}

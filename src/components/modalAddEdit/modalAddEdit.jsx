@@ -5,15 +5,16 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-  DialogContentText,
+  // DialogContentText,
   DialogTitle,
-  Container
+  Container,
 } from "@mui/material";
 import './modalAddEdit.scss';
 
 const departmentFields = [
   'name',
   'description'
+  //  '_id'
 ];
 
 const employeeFields = [
@@ -21,11 +22,16 @@ const employeeFields = [
   'name',
   'age',
   'position',
-  // '_Department'
+  // 'departmentName'
 ];
 
-const ModalAddEdit = ({ openModal, closeHandler, okHandler, entity, modalAction }) => {
+const ModalAddEdit = ({ departments, employee, setEmployee, openModal, closeHandler, okHandler, entity, modalAction }) => {
   const [formObject, setFormObject] = useState(typeof entity !== 'string' ? entity : {});
+  const [selectDepartment, setSelectDepartment] = useState('');
+
+  const selectDepartmentHandler = (e) => {
+    setSelectDepartment(e.target.value);
+  }
 
   return (
     <Dialog
@@ -36,7 +42,7 @@ const ModalAddEdit = ({ openModal, closeHandler, okHandler, entity, modalAction 
     >
       <DialogTitle>{modalAction} {entity}</DialogTitle>
       <DialogContent>
-        <Container component="form">
+        <Container component="form" onSubmit={() => {console.log('submit!')}}>
           {
             (entity === 'Departments') ?
               departmentFields.map((item, index) =>
@@ -50,25 +56,56 @@ const ModalAddEdit = ({ openModal, closeHandler, okHandler, entity, modalAction 
                 variant="standard"
                 onChange={(e) => {
                   setFormObject({ ...formObject, [item]: e.target.value })
-                  console.log(formObject)
                 }}
               />
             ) :
-            employeeFields.map((item, index) =>
-              <TextField
-                key={`employee_${index}`}
-                margin="dense"
-                id={item}
-                label={item}
-                type="text"
-                fullWidth
-                variant="standard"
-                onChange={(e) => {
-                  setFormObject({ ...formObject, [item]: e.target.value })
-                  console.log(formObject)
-                }}
-              />
-            )
+            <>
+              {
+                employeeFields.map((item, index) =>
+                  <TextField
+                    key={`employee_${index}`}
+                    margin="dense"
+                    id={item}
+                    label={item}
+                    type="text"
+                    fullWidth
+                    variant="standard"
+                    onChange={(e) => {
+                      setFormObject({ ...formObject, [item]: e.target.value })
+                    }}
+                  />
+                )
+              }
+                <TextField
+                  margin="dense"
+                  className="departmentField"
+                  name="inputDepartment"
+                  variant="outlined"
+                  required
+                  fullWidth
+                  id="inputDepartment"
+                  value={selectDepartment}
+                  select
+                  label="departmentName"
+                  type="text"
+                  onChange={(e) => selectDepartmentHandler(e)}
+                  // onChange={(e) => {
+                  //   setSelectDepartment(e.target.value);
+                  //   setFormObject({ ...formObject, departmentName: e.target.value });
+                  // }}
+                  SelectProps={{
+                    native: true,
+                  }}          
+                >
+                {
+                  departments.map((option) => (
+                    <option key={option.name} value={option.name}>
+                      {option.name}
+                    </option>
+                  ))
+                }
+              </TextField>              
+            </>
           }
         </Container>
       </DialogContent>
@@ -78,7 +115,8 @@ const ModalAddEdit = ({ openModal, closeHandler, okHandler, entity, modalAction 
           setFormObject({})
         }}>Close</Button>
         <Button onClick={() => {
-          okHandler(formObject)
+          // okHandler(formObject)
+          okHandler({ ...formObject, departmentName: selectDepartment })
           setFormObject({})
         }}>Add/Edit</Button>
       </DialogActions>

@@ -21,14 +21,10 @@ const MainContainer = ({ entity }) => {
 
   useEffect(() => {
     localStorage.setItem('departments', JSON.stringify(departments));
-    // if (departments !== []) {
-    // }
   }, [departments])
 
   useEffect(() => {
     localStorage.setItem('employee', JSON.stringify(employee));
-    // if (employee !== []) {
-    // }
   }, [employee])
 
   const okHandler = (entityObject) => {
@@ -39,6 +35,7 @@ const MainContainer = ({ entity }) => {
     } else {
       //  if entity is object
     }
+    console.log('entityObject', entityObject);
     setOpenModal(false);
   }
 
@@ -53,6 +50,9 @@ const MainContainer = ({ entity }) => {
       />
 
       <ModalAddEdit
+        departments={departments}
+        employee={employee}
+        setEmployee={setEmployee}
         openModal={openModal}
         closeHandler={() => setOpenModal(false)}
         okHandler={okHandler}
