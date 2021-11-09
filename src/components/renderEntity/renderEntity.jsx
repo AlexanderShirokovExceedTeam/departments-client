@@ -8,31 +8,28 @@ import { Edit } from '@mui/icons-material';
 import { Delete } from '@mui/icons-material';
 import './renderEntity.scss';
 
-const RenderEntity = ({ entity, departments, employee }) => {
+const RenderEntity = ({ entity, departments, employee, setIsEdit, openModal, okHandler, formObject, setFormObject }) => {
   const [sortedEmployee, setSortedEmployee] = useState('');
 
-  const handleEdit = () => {
-    //  setEntity current edited value
+  const handleEdit = (editedItem) => {
+    setIsEdit();
+    openModal();
+    setFormObject(editedItem);
   }
 
-  const handleDelete = () => {
+  const handleDelete = (item, index) => {
     
   }
 
-  const filterHandler = (currentDepartmentName, currentIndex) => {
-    setSortedEmployee([...employee.filter((asd) => 
-      asd.departmentName === currentDepartmentName)]);
-    //  entity='Employee'
-    console.log('currentIndex is', currentIndex);
-    console.log('sortedEmployee.departmentName is', sortedEmployee.departmentName);
-    console.log('currentDepartmentName is', currentDepartmentName);
+  const filterHandler = (currentDepartmentName) => {
+    setSortedEmployee([...employee.filter((currentEmployee) =>
+      currentEmployee.departmentName === currentDepartmentName)]);
   }
-  console.log('sortedEmployee is', sortedEmployee);
   
   return (
     <Container className="render-entity">
       {
-        entity === 'Departments' ?
+        entity.label === 'Department' ?
         departments.map((item, index) => {
           return (
             <Container
@@ -48,13 +45,13 @@ const RenderEntity = ({ entity, departments, employee }) => {
               </Typography>
               <IconButton
                 type="Button"
-                onClick={() => handleEdit()}
+                onClick={() => handleEdit(item)}
               >
                 <Edit />
               </IconButton>
               <IconButton
                 type="Button"
-                onClick={() => handleDelete()}
+                onClick={() => handleDelete(item, index)}
                 disabled={true}
               >
                 <Delete />
@@ -62,7 +59,6 @@ const RenderEntity = ({ entity, departments, employee }) => {
             </Container>
           )
         }) :
-        entity === 'Employee' ?
         employee.map((item, index) => {
           return (
             <Container
@@ -83,21 +79,19 @@ const RenderEntity = ({ entity, departments, employee }) => {
               </Typography>
               <IconButton
                 type="Button"
-                onClick={() => handleEdit()}
+                onClick={() => handleEdit(item)}
               >
                 <Edit />
               </IconButton>
               <IconButton
                 type="Button"
-                onClick={() => handleDelete()}
+                onClick={() => handleDelete(item, index)}
               >
                 <Delete />
               </IconButton>
             </Container>
           )
-        }) :
-        <>
-        </>
+        })
       }
     </Container>
   )

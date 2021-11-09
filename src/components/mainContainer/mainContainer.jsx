@@ -1,14 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { Container } from '@mui/material';
 import SideBar from '../sidebar/sideBar';
-import ContentHeader from '../contentHeader/contentHeader';
+import HeaderComponent from '../headerComponent/headerComponent';
+import RenderEntity from '../renderEntity/renderEntity';
 import ModalAddEdit from '../modalAddEdit/modalAddEdit';
 import './mainContainer.scss';
 
 const MainContainer = ({ entity }) => {
   const [openModal, setOpenModal] = useState(false);
+  const [isEdit, setIsEdit] = useState(false);
   const [departments, setDepartments] = useState([]);
   const [employee, setEmployee] = useState([]);
+  const [formObject, setFormObject] = useState(entity);
 
   useEffect(() => {
     if (localStorage.getItem('departments')) {
@@ -28,36 +31,45 @@ const MainContainer = ({ entity }) => {
   }, [employee])
 
   const okHandler = (entityObject) => {
-    if (entity === 'Departments') {
+    if (entity.label === 'Department') {
       setDepartments([...departments, entityObject]);
-    } else if (entity === 'Employee') {
+    } else if (entity.label === 'Employee') {
       setEmployee([...employee, entityObject]);
     } else {
       //  if entity is object
     }
-    console.log('entityObject', entityObject);
+    
     setOpenModal(false);
   }
 
   return (
     <Container className="main-container">
       <SideBar />
-      <ContentHeader
-        openModal={() => setOpenModal(true)}
-        entity={entity}
-        departments={departments}
-        employee={employee}
-      />
-
+      <Container className="content">
+        <HeaderComponent
+          openModal={() => setOpenModal(true)}
+          label={entity.label}
+        />
+        <RenderEntity
+          entity={entity}
+          departments={departments}
+          employee={employee}
+          openModal={() => setOpenModal(true)}
+          setIsEdit={() => setIsEdit(true)}
+          okHandler={okHandler}
+          formObject={formObject}
+          setFormObject={setFormObject}
+        />
+      </Container>
       <ModalAddEdit
         departments={departments}
-        employee={employee}
-        setEmployee={setEmployee}
         openModal={openModal}
         closeHandler={() => setOpenModal(false)}
-        okHandler={okHandler}
-        modalAction='Create'
         entity={entity}
+        isEdit={isEdit}
+        okHandler={okHandler}
+        formObject={formObject}
+        setFormObject={setFormObject}
       />
     </Container>
   )

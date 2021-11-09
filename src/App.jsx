@@ -12,14 +12,30 @@ import MainContainer from './components/mainContainer/mainContainer';
 import './App.scss';
 
 const App = () => {
+  const entDepartments = {
+    label: 'Department',
+    name: '',
+    description: ''
+  }
+
+  const entEmployee = {
+    label: 'Employee',
+    email: '',
+    name: '',
+    age: '',
+    position: '',
+    departmentName: ''
+  }
+
   return (
+    //  entity={entity} send it as object
     <Container className="App">
       <Typography className='header' variant='h1'>
         Department CMS
       </Typography>
       <Switch>
-        <Route path='/departments' render={() => <MainContainer entity='Departments'/>} />
-        <Route path='/employee' render={() => <MainContainer entity='Employee'/>} />
+        <Route path='/departments' render={() => <MainContainer entity={entDepartments}/>} />
+        <Route path='/employee' render={() => <MainContainer entity={entEmployee}/>} />
         <Redirect from='/' to='departments'/>
       </Switch>
     </Container>

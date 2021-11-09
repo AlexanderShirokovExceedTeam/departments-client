@@ -9,30 +9,22 @@ import {
   DialogTitle,
   Container,
 } from "@mui/material";
+import UserTextField from "../userTextField/userTextField";
 import './modalAddEdit.scss';
 
-const departmentFields = [
-  'name',
-  'description'
-  //  '_id'
-];
-
-const employeeFields = [
-  'email',
-  'name',
-  'age',
-  'position',
-  // 'departmentName'
-];
-
-const ModalAddEdit = ({ departments, employee, setEmployee, openModal, closeHandler, okHandler, entity, modalAction }) => {
-  const [formObject, setFormObject] = useState(typeof entity !== 'string' ? entity : {});
+const ModalAddEdit = ({ departments, openModal, closeHandler, okHandler, entity, isEdit, formObject, setFormObject }) => {
+  //  add some boolean state for switch between ADD & EDIT
   const [selectDepartment, setSelectDepartment] = useState('');
 
   const selectDepartmentHandler = (e) => {
     setSelectDepartment(e.target.value);
+    setFormObject({ ...formObject, departmentName: e.target.value})
   }
 
+  const setFieldHandler = (key, e) => {
+    setFormObject({ ...formObject, [key]: e.target.value })
+  }
+  
   return (
     <Dialog
       aria-labelledby="scalable-modal"
@@ -40,74 +32,70 @@ const ModalAddEdit = ({ departments, employee, setEmployee, openModal, closeHand
       open={openModal}
       onClose={closeHandler}
     >
-      <DialogTitle>{modalAction} {entity}</DialogTitle>
+      <DialogTitle>{isEdit ? 'Edit' : 'Add'} {entity.label}</DialogTitle>
       <DialogContent>
-        <Container component="form" onSubmit={() => {console.log('submit!')}}>
-          {
-            (entity === 'Departments') ?
-              departmentFields.map((item, index) =>
-              <TextField
-                key={`department_${index}`}
-                margin="dense"
-                id={item}
-                label={item}
-                type="text"
-                fullWidth
-                variant="standard"
-                onChange={(e) => {
-                  setFormObject({ ...formObject, [item]: e.target.value })
-                }}
-              />
-            ) :
-            <>
-              {
-                employeeFields.map((item, index) =>
-                  <TextField
-                    key={`employee_${index}`}
-                    margin="dense"
-                    id={item}
-                    label={item}
-                    type="text"
-                    fullWidth
-                    variant="standard"
-                    onChange={(e) => {
-                      setFormObject({ ...formObject, [item]: e.target.value })
-                    }}
-                  />
-                )
-              }
-                <TextField
-                  margin="dense"
-                  className="departmentField"
-                  name="inputDepartment"
-                  variant="outlined"
-                  required
-                  fullWidth
-                  id="inputDepartment"
-                  value={selectDepartment}
-                  select
-                  label="departmentName"
-                  type="text"
-                  onChange={(e) => selectDepartmentHandler(e)}
-                  // onChange={(e) => {
-                  //   setSelectDepartment(e.target.value);
-                  //   setFormObject({ ...formObject, departmentName: e.target.value });
-                  // }}
-                  SelectProps={{
-                    native: true,
-                  }}          
-                >
-                {
-                  departments.map((option) => (
-                    <option key={option.name} value={option.name}>
-                      {option.name}
-                    </option>
-                  ))
-                }
-              </TextField>              
-            </>
-          }
-        </Container>
+        {
+          (entity.label === 'Department') ?
+          <Container component="form">
+            <UserTextField
+              currentKey='name'
+              value={formObject.name}
+              setFieldHandler={setFieldHandler}
+            />
+            <UserTextField
+              currentKey='description'
+              formObject={formObject.description}
+              setFieldHandler={setFieldHandler}
+            />
+          </Container> :          
+          <Container component="form">
+            <UserTextField
+              currentKey='email'
+              formObject={formObject.email}
+              setFieldHandler={setFieldHandler}
+            />
+            <UserTextField
+              currentKey='name'
+              formObject={formObject.name}
+              setFieldHandler={setFieldHandler}
+            />
+            <UserTextField
+              currentKey='age'
+              formObject={formObject.age}
+              setFieldHandler={setFieldHandler}
+            />
+            <UserTextField
+              currentKey='position'
+              formObject={formObject.position}
+              setFieldHandler={setFieldHandler}
+            />
+            <TextField
+              margin="dense"
+              className="departmentField"
+              name="inputDepartment"
+              variant="outlined"
+              required
+              fullWidth
+              id="inputDepartment"
+              value={selectDepartment}
+              select
+              label="departmentName"
+              type="text"
+              onChange={(e) => selectDepartmentHandler(e)}
+              SelectProps={{
+                native: true,
+              }}          
+            >
+            {
+              departments.map((option) => (
+                <option key={option.name} value={option.name}>
+                  {option.name}
+                </option>
+              ))
+            }
+            </TextField>
+          </Container> 
+        }
       </DialogContent>
       <DialogActions>
         <Button onClick={() => {
@@ -115,10 +103,9 @@ const ModalAddEdit = ({ departments, employee, setEmployee, openModal, closeHand
           setFormObject({})
         }}>Close</Button>
         <Button onClick={() => {
-          // okHandler(formObject)
-          okHandler({ ...formObject, departmentName: selectDepartment })
+          okHandler({ ...formObject })
           setFormObject({})
-        }}>Add/Edit</Button>
+        }}>{isEdit ? 'Edit' : 'Add'}</Button>
       </DialogActions>
     </Dialog>
   )
