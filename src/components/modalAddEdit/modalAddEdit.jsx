@@ -13,7 +13,6 @@ import UserTextField from "../userTextField/userTextField";
 import './modalAddEdit.scss';
 
 const ModalAddEdit = ({ departments, openModal, closeHandler, okHandler, entity, isEdit, formObject, setFormObject }) => {
-  //  add some boolean state for switch between ADD & EDIT
   const [selectDepartment, setSelectDepartment] = useState('');
 
   const selectDepartmentHandler = (e) => {
@@ -44,29 +43,29 @@ const ModalAddEdit = ({ departments, openModal, closeHandler, okHandler, entity,
             />
             <UserTextField
               currentKey='description'
-              formObject={formObject.description}
+              value={formObject.description}
               setFieldHandler={setFieldHandler}
             />
           </Container> :          
           <Container component="form">
             <UserTextField
               currentKey='email'
-              formObject={formObject.email}
+              value={formObject.email}
               setFieldHandler={setFieldHandler}
             />
             <UserTextField
               currentKey='name'
-              formObject={formObject.name}
+              value={formObject.name}
               setFieldHandler={setFieldHandler}
             />
             <UserTextField
               currentKey='age'
-              formObject={formObject.age}
+              value={formObject.age}
               setFieldHandler={setFieldHandler}
             />
             <UserTextField
               currentKey='position'
-              formObject={formObject.position}
+              value={formObject.position}
               setFieldHandler={setFieldHandler}
             />
             <TextField
@@ -77,7 +76,7 @@ const ModalAddEdit = ({ departments, openModal, closeHandler, okHandler, entity,
               required
               fullWidth
               id="inputDepartment"
-              value={selectDepartment}
+              value={isEdit ? formObject.departmentName : selectDepartment}
               select
               label="departmentName"
               type="text"
@@ -103,7 +102,7 @@ const ModalAddEdit = ({ departments, openModal, closeHandler, okHandler, entity,
           setFormObject({})
         }}>Close</Button>
         <Button onClick={() => {
-          okHandler({ ...formObject })
+          okHandler({ ...formObject, label: entity.label })
           setFormObject({})
         }}>{isEdit ? 'Edit' : 'Add'}</Button>
       </DialogActions>

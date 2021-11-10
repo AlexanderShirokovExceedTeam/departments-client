@@ -1,97 +1,110 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
+import { useHistory } from "react-router-dom";
 import {
   Container,
   Typography,
   IconButton
 } from "@mui/material";
-import { Edit } from '@mui/icons-material';
-import { Delete } from '@mui/icons-material';
+import { Edit, Delete } from '@mui/icons-material';
 import './renderEntity.scss';
 
-const RenderEntity = ({ entity, departments, employee, setIsEdit, openModal, okHandler, formObject, setFormObject }) => {
-  const [sortedEmployee, setSortedEmployee] = useState('');
+const RenderEntity = ({ entity, departments, employee, setIsEdit, openModal, setFormObject, setIndexOfEdit, deleteEntity }) => {
+  const history = useHistory();
+  const [sortedEmployee, setSortedEmployee] = useState([]);
+  const [deleteIsDisabled, setDeleteIsDisabled] = useState([]);
 
-  const handleEdit = (editedItem) => {
+  const handleEdit = (editedItem, index) => {
     setIsEdit();
     openModal();
     setFormObject(editedItem);
-  }
-
-  const handleDelete = (item, index) => {
-    
+    setIndexOfEdit(index);
   }
 
   const filterHandler = (currentDepartmentName) => {
     setSortedEmployee([...employee.filter((currentEmployee) =>
       currentEmployee.departmentName === currentDepartmentName)]);
+    history.push('/employee');
   }
-  
+
+  const deleteIsEnable = (currentDepartmentName) => (
+    setDeleteIsDisabled(employee.filter((currentEmployee) => currentEmployee.departmentName === currentDepartmentName))
+  )
+
   return (
     <Container className="render-entity">
       {
         entity.label === 'Department' ?
-        departments.map((item, index) => {
-          return (
-            <Container
-              key={`dep-prop-${index}`}
-              className={`department department-${index}`}
-              onClick={() => filterHandler(item.name, index)}
-            >
-              <Typography>
-                {item.name}
-              </Typography>
-              <Typography>
-                {item.description}
-              </Typography>
-              <IconButton
-                type="Button"
-                onClick={() => handleEdit(item)}
+          departments.map((item, index) => {
+            const filteredEmployee = employee.filter((currentEmployee) =>
+              currentEmployee.departmentName === item.name);
+
+            return (
+              <Container
+                key={`dep-prop-${index}`}
+                className={`department department-${index}`}
+                onClick={() => filterHandler(item.name, index)}
               >
-                <Edit />
-              </IconButton>
-              <IconButton
-                type="Button"
-                onClick={() => handleDelete(item, index)}
-                disabled={true}
+                <Typography>
+                  {item.name}
+                </Typography>
+                <Typography>
+                  {item.description}
+                </Typography>
+                <IconButton
+                  type="Button"
+                  onClick={(e) => {
+                    handleEdit(item, index);
+                    e.stopPropagation();
+                  }}
+                >
+                  <Edit />
+                </IconButton>
+                <IconButton
+                  type="Button"
+                  onClick={(e) => {
+                    deleteEntity(item, index);
+                    e.stopPropagation();
+                  }}
+                  disabled={filteredEmployee.length === 0}
+                >
+                  <Delete />
+                </IconButton>
+              </Container>
+            )
+          }) :
+          sortedEmployee.map((item, index) => {
+            return (
+              <Container
+                key={`empl-prop-${index}`}
+                className={`employee employee-${index}`}
               >
-                <Delete />
-              </IconButton>
-            </Container>
-          )
-        }) :
-        employee.map((item, index) => {
-          return (
-            <Container
-              key={`empl-prop-${index}`}
-              className={`employee employee-${index}`}
-            >
-              <Typography>
-                {item.email}
-              </Typography>
-              <Typography>
-                {item.name}
-              </Typography>
-              <Typography>
-                {item.age}
-              </Typography>
-              <Typography>
-                {item.position}
-              </Typography>
-              <IconButton
-                type="Button"
-                onClick={() => handleEdit(item)}
-              >
-                <Edit />
-              </IconButton>
-              <IconButton
-                type="Button"
-                onClick={() => handleDelete(item, index)}
-              >
-                <Delete />
-              </IconButton>
-            </Container>
-          )
-        })
+                <Typography>
+                  {item.email}
+                </Typography>
+                <Typography>
+                  {item.name}
+                </Typography>
+                <Typography>
+                  {item.age}
+                </Typography>
+                <Typography>
+                  {item.position}
+                </Typography>
+                <IconButton
+                  type="Button"
+                  onClick={() => handleEdit(item, index)}
+                >
+                  <Edit />
+                </IconButton>
+                <IconButton
+                  type="Button"
+                  onClick={() => deleteEntity(item, index)}
+                >
+                  <Delete />
+                </IconButton>
+              </Container>
+            )
+          })
       }
     </Container>
   )

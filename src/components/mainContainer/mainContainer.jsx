@@ -9,6 +9,7 @@ import './mainContainer.scss';
 const MainContainer = ({ entity }) => {
   const [openModal, setOpenModal] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
+  const [indexOfEdit, setIndexOfEdit] = useState('')
   const [departments, setDepartments] = useState([]);
   const [employee, setEmployee] = useState([]);
   const [formObject, setFormObject] = useState(entity);
@@ -31,15 +32,35 @@ const MainContainer = ({ entity }) => {
   }, [employee])
 
   const okHandler = (entityObject) => {
-    if (entity.label === 'Department') {
+    if (entityObject.label === 'Department' && isEdit) {
+      departments.splice(indexOfEdit, 1, entityObject);
+      setDepartments([...departments]);
+    } else if (entityObject.label === 'Department' && !isEdit) {
       setDepartments([...departments, entityObject]);
-    } else if (entity.label === 'Employee') {
+    }
+
+    if (entityObject.label === 'Employee' && isEdit) {
+      employee.splice(indexOfEdit, 1, entityObject);
+      setEmployee([...employee]);
+    } else if (entityObject.label === 'Employee' && !isEdit) {
       setEmployee([...employee, entityObject]);
-    } else {
-      //  if entity is object
     }
     
     setOpenModal(false);
+    setIsEdit(false);
+    setIndexOfEdit('');
+  }
+
+  const deleteEntity = (objectForDelete, indexOfDelete) => {
+    if (objectForDelete.label === 'Department') {
+      console.log(`indexOfEditDepartment`, indexOfDelete);
+      departments.splice(indexOfDelete, 1);
+      setDepartments([...departments]);
+    } else if (objectForDelete.label === 'Employee') {
+      console.log(`indexOfEditEmployee`, indexOfDelete);
+      employee.splice(indexOfDelete, 1);
+      setEmployee([...employee]);
+    }
   }
 
   return (
@@ -59,6 +80,8 @@ const MainContainer = ({ entity }) => {
           okHandler={okHandler}
           formObject={formObject}
           setFormObject={setFormObject}
+          setIndexOfEdit={setIndexOfEdit}
+          deleteEntity={deleteEntity}
         />
       </Container>
       <ModalAddEdit
