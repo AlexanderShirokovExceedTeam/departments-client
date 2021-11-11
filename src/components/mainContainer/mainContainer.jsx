@@ -32,32 +32,47 @@ const MainContainer = ({ entity }) => {
   }, [employee])
 
   const okHandler = (entityObject) => {
-    if (entityObject.label === 'Department' && isEdit) {
-      departments.splice(indexOfEdit, 1, entityObject);
-      setDepartments([...departments]);
-    } else if (entityObject.label === 'Department' && !isEdit) {
-      setDepartments([...departments, entityObject]);
+    departments.map(item => {
+      console.log(item.name === entityObject.name);
+    })
+    const func = () => {
+      setOpenModal(false);
+      setIsEdit(false);
+      setIndexOfEdit('');
     }
 
-    if (entityObject.label === 'Employee' && isEdit) {
-      employee.splice(indexOfEdit, 1, entityObject);
-      setEmployee([...employee]);
-    } else if (entityObject.label === 'Employee' && !isEdit) {
-      setEmployee([...employee, entityObject]);
+    if (entityObject.label === 'Department') {
+      if (departments.map(item => item.name === entityObject.name)) {
+        console.log("ENTER UNIQUE NAME!")
+      } else if (isEdit && entityObject.name) {
+        departments.splice(indexOfEdit, 1, entityObject);
+        setDepartments([...departments]);
+        func();
+      } else if (!isEdit && entityObject.name) {
+        setDepartments([...departments, entityObject]);
+        func();
+      } else {
+        console.log("NAME IS REQUIRED!")
+      }
+    } else if (entityObject.label === 'Employee') {
+      if (isEdit && entityObject.email && entityObject.name && entityObject.age && entityObject.position) {
+        employee.splice(indexOfEdit, 1, entityObject);
+        setEmployee([...employee]);
+        func();
+      } else if (!isEdit && entityObject.email && entityObject.name && entityObject.age && entityObject.position) {
+        setEmployee([...employee, entityObject]);
+        func();
+      } else {
+        console.log("FILL ALL REQUIRED FIELDS!")
+      }
     }
-    
-    setOpenModal(false);
-    setIsEdit(false);
-    setIndexOfEdit('');
   }
 
   const deleteEntity = (objectForDelete, indexOfDelete) => {
     if (objectForDelete.label === 'Department') {
-      console.log(`indexOfEditDepartment`, indexOfDelete);
       departments.splice(indexOfDelete, 1);
       setDepartments([...departments]);
     } else if (objectForDelete.label === 'Employee') {
-      console.log(`indexOfEditEmployee`, indexOfDelete);
       employee.splice(indexOfDelete, 1);
       setEmployee([...employee]);
     }

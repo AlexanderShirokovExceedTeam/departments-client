@@ -11,7 +11,6 @@ import './renderEntity.scss';
 const RenderEntity = ({ entity, departments, employee, setIsEdit, openModal, setFormObject, setIndexOfEdit, deleteEntity }) => {
   const history = useHistory();
   const [sortedEmployee, setSortedEmployee] = useState([]);
-  const [deleteIsDisabled, setDeleteIsDisabled] = useState([]);
 
   const handleEdit = (editedItem, index) => {
     setIsEdit();
@@ -25,10 +24,6 @@ const RenderEntity = ({ entity, departments, employee, setIsEdit, openModal, set
       currentEmployee.departmentName === currentDepartmentName)]);
     history.push('/employee');
   }
-
-  const deleteIsEnable = (currentDepartmentName) => (
-    setDeleteIsDisabled(employee.filter((currentEmployee) => currentEmployee.departmentName === currentDepartmentName))
-  )
 
   return (
     <Container className="render-entity">
