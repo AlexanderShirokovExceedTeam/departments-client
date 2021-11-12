@@ -13,6 +13,7 @@ const MainContainer = ({ entity }) => {
   const [departments, setDepartments] = useState([]);
   const [employee, setEmployee] = useState([]);
   const [formObject, setFormObject] = useState(entity);
+  const [currentDepartment, setCurrentDepartment] = useState('');
 
   useEffect(() => {
     if (localStorage.getItem('departments')) {
@@ -32,25 +33,28 @@ const MainContainer = ({ entity }) => {
   }, [employee])
 
   const okHandler = (entityObject) => {
-    departments.map(item => {
-      console.log(item.name === entityObject.name);
-    })
-    const func = () => {
+
+    Object.keys(entityObject).map(key => entityObject[key] = entityObject[key].trim());
+
+    const closeModal = () => {
       setOpenModal(false);
       setIsEdit(false);
       setIndexOfEdit('');
     }
 
     if (entityObject.label === 'Department') {
-      if (departments.map(item => item.name === entityObject.name)) {
-        console.log("ENTER UNIQUE NAME!")
+      delete entityObject.departmentName;
+      if (departments.find(item => item.name === entityObject.name) && !isEdit) {
+        console.log("ENTER UNIQUE NAME!");
+        departments.map(item => console.log(`item.name is`, item.name));
+        console.log(`entityObject.name`, entityObject.name);
       } else if (isEdit && entityObject.name) {
         departments.splice(indexOfEdit, 1, entityObject);
         setDepartments([...departments]);
-        func();
+        closeModal();
       } else if (!isEdit && entityObject.name) {
         setDepartments([...departments, entityObject]);
-        func();
+        closeModal();
       } else {
         console.log("NAME IS REQUIRED!")
       }
@@ -58,10 +62,10 @@ const MainContainer = ({ entity }) => {
       if (isEdit && entityObject.email && entityObject.name && entityObject.age && entityObject.position) {
         employee.splice(indexOfEdit, 1, entityObject);
         setEmployee([...employee]);
-        func();
+        closeModal();
       } else if (!isEdit && entityObject.email && entityObject.name && entityObject.age && entityObject.position) {
         setEmployee([...employee, entityObject]);
-        func();
+        closeModal();
       } else {
         console.log("FILL ALL REQUIRED FIELDS!")
       }
@@ -73,7 +77,8 @@ const MainContainer = ({ entity }) => {
       departments.splice(indexOfDelete, 1);
       setDepartments([...departments]);
     } else if (objectForDelete.label === 'Employee') {
-      employee.splice(indexOfDelete, 1);
+      const index = employee.indexOf(objectForDelete)
+      employee.splice(index, 1);
       setEmployee([...employee]);
     }
   }
@@ -97,6 +102,8 @@ const MainContainer = ({ entity }) => {
           setFormObject={setFormObject}
           setIndexOfEdit={setIndexOfEdit}
           deleteEntity={deleteEntity}
+          currentDepartment={currentDepartment}
+          setCurrentDepartment={setCurrentDepartment}
         />
       </Container>
       <ModalAddEdit
@@ -108,6 +115,7 @@ const MainContainer = ({ entity }) => {
         okHandler={okHandler}
         formObject={formObject}
         setFormObject={setFormObject}
+        currentDepartment={currentDepartment}
       />
     </Container>
   )

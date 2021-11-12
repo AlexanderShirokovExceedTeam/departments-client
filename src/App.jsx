@@ -28,7 +28,6 @@ const App = () => {
   }
 
   return (
-    //  entity={entity} send it as object
     <Container className="App">
       <Typography className='header' variant='h1'>
         Department CMS

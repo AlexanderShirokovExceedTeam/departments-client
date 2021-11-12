@@ -20,7 +20,7 @@ const UserTextField = ({ currentKey, value, type, setFieldHandler, validators, e
     // />
     <TextValidator
       margin="dense"
-      label={currentKey}
+      label={currentKey} //  if (isEdit) label = ''
       value={value}
       type={type}
       fullWidth

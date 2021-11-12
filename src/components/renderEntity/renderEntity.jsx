@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import {
   Container,
@@ -8,10 +8,14 @@ import {
 import { Edit, Delete } from '@mui/icons-material';
 import './renderEntity.scss';
 
-const RenderEntity = ({ entity, departments, employee, setIsEdit, openModal, setFormObject, setIndexOfEdit, deleteEntity }) => {
+const RenderEntity = ({ entity, departments, employee, setIsEdit, openModal, setFormObject, setIndexOfEdit, deleteEntity, currentDepartment, setCurrentDepartment }) => {
   const history = useHistory();
   const [sortedEmployee, setSortedEmployee] = useState([]);
 
+  useEffect(() => {
+    setSortedEmployee([...employee.filter((currentEmployee) => currentEmployee.departmentName === currentDepartment)]);
+  }, [employee])
+  
   const handleEdit = (editedItem, index) => {
     setIsEdit();
     openModal();
@@ -20,6 +24,7 @@ const RenderEntity = ({ entity, departments, employee, setIsEdit, openModal, set
   }
 
   const filterHandler = (currentDepartmentName) => {
+    setCurrentDepartment(currentDepartmentName);
     setSortedEmployee([...employee.filter((currentEmployee) =>
       currentEmployee.departmentName === currentDepartmentName)]);
     history.push('/employee');
@@ -32,7 +37,6 @@ const RenderEntity = ({ entity, departments, employee, setIsEdit, openModal, set
           departments.map((item, index) => {
             const filteredEmployee = employee.filter((currentEmployee) =>
               currentEmployee.departmentName === item.name);
-
             return (
               <Container
                 key={`dep-prop-${index}`}
@@ -60,7 +64,7 @@ const RenderEntity = ({ entity, departments, employee, setIsEdit, openModal, set
                     deleteEntity(item, index);
                     e.stopPropagation();
                   }}
-                  disabled={filteredEmployee.length === 0}
+                  disabled={filteredEmployee.length !== 0}
                 >
                   <Delete />
                 </IconButton>
