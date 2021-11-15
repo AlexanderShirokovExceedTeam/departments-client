@@ -7,12 +7,8 @@ const SideBar = () => {
 
   return (
     <Container className="sidebar">
-      <Link        
-        to="/departments"
-      >Departments</Link>
-      <Link
-        to="/employee"
-      >Employee</Link>
+      <Link to="/departments">Departments</Link>
+      {/* <Link to="/employee">Employee</Link> */}
     </Container>
   )
 }
