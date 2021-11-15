@@ -12,17 +12,23 @@ import { TextValidator, SelectValidator, ValidatorForm } from "react-material-ui
 import UserTextField from "../userTextField/userTextField";
 import './modalAddEdit.scss';
 
-const ModalAddEdit = ({ openModal, closeHandler, okHandler, entity, isEdit, formObject, setFormObject, currentDepartment }) => {
-  const [selectDepartment, setSelectDepartment] = useState('');
-
-  const selectDepartmentHandler = (e) => {
-    setSelectDepartment(e.target.value);
-    setFormObject({ ...formObject, departmentName: e.target.value})
-  }
+const ModalAddEdit = ({ openModal, closeHandler, okHandler, entityLabel, isEdit, formObject, setFormObject, setIsEdit }) => {
+  // const [selectDepartment, setSelectDepartment] = useState('');
+  // const selectDepartmentHandler = (e) => {
+  //   setSelectDepartment(e.target.value);
+  //   setFormObject({ ...formObject, departmentName: e.target.value})
+  // }
   
   const setFieldHandler = (key, e) => {
     setFormObject({ ...formObject, [key]: e.target.value })
   }
+
+  const onSubmit = (e, fObject) => {
+    if (e.key === "Enter") {
+      okHandler(fObject)
+      setFormObject({})
+    }
+  };
   
   return (
     <ValidatorForm
@@ -34,13 +40,18 @@ const ModalAddEdit = ({ openModal, closeHandler, okHandler, entity, isEdit, form
         aria-labelledby="scalable-modal"
         className="scalable-modal"
         open={openModal}
-        onClose={closeHandler}
+        onClose={() => closeHandler(false)}
       >
-        <DialogTitle>{isEdit ? 'Edit' : 'Add'} {entity.label}</DialogTitle>
+        <DialogTitle>{isEdit ? 'Edit' : 'Add'} {entityLabel}</DialogTitle>
         <DialogContent>
           {
-            (entity.label === 'Department') ?
-            <Container component="form">
+            (entityLabel === 'Department') ?
+            <Container
+              component="form"
+              onKeyPress={(e) =>
+                onSubmit(e, { ...formObject, label: entityLabel })
+              }
+            >
               <UserTextField
                 currentKey='name'
                 value={formObject.name}
@@ -92,11 +103,6 @@ const ModalAddEdit = ({ openModal, closeHandler, okHandler, entity, isEdit, form
                 setFieldHandler={setFieldHandler}
                 required={true}
               />
-              <Typography
-                margin="dense"
-              >
-                {currentDepartment}
-              </Typography>
               {/* <TextField
                 margin="dense"
                 className="departmentField"
@@ -126,16 +132,19 @@ const ModalAddEdit = ({ openModal, closeHandler, okHandler, entity, isEdit, form
           }
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => {
-            closeHandler()
-            setFormObject({})
-          }}>Close</Button>
           <Button
             onClick={() => {
-              okHandler({ ...formObject, label: entity.label, departmentName: currentDepartment })
+            closeHandler(false)
+            setFormObject({})
+            setIsEdit(false)
+          }}
+          >Close</Button>
+          <Button
+            onClick={() => {
+              okHandler({ ...formObject, label: entityLabel })
               setFormObject({})
             }}
-            type="submit"
+            type="onSubmit"
           >{isEdit ? 'Edit' : 'Add'}</Button>
         </DialogActions>
       </Dialog>

@@ -15,7 +15,7 @@ const HeaderComponent = ({ openModal, label}) => {
       <Button
         variant="contained"
         color="primary"
-        onClick={openModal}
+        onClick={() => openModal(true)}
       >
         Add
       </Button>

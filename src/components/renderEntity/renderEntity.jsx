@@ -17,8 +17,8 @@ const RenderEntity = ({ entity, departments, employee, setIsEdit, openModal, set
   }, [employee])
   
   const handleEdit = (editedItem, index) => {
-    setIsEdit();
-    openModal();
+    setIsEdit(true);
+    openModal(true);
     setFormObject(editedItem);
     setIndexOfEdit(index);
   }

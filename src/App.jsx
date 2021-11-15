@@ -11,21 +11,22 @@ import {
 import MainContainer from './components/mainContainer/mainContainer';
 import './App.scss';
 
-const App = () => {
-  const entDepartments = {
-    label: 'Department',
-    name: '',
-    description: ''
-  }
+const department = {
+  label: 'Department',
+  name: '',
+  description: ''
+}
 
-  const entEmployee = {
-    label: 'Employee',
-    email: '',
-    name: '',
-    age: '',
-    position: '',
-    departmentName: ''
-  }
+const employee = {
+  label: 'Employee',
+  email: '',
+  name: '',
+  age: '',
+  position: '',
+  departmentName: ''
+}
+
+const App = () => {
 
   return (
     <Container className="App">
@@ -33,8 +34,8 @@ const App = () => {
         Department CMS
       </Typography>
       <Switch>
-        <Route path='/departments' render={() => <MainContainer entity={entDepartments}/>} />
-        <Route path='/employee' render={() => <MainContainer entity={entEmployee}/>} />
+        <Route path='/departments' render={() => <MainContainer entity={department}/>} />
+        <Route path='/employee' render={() => <MainContainer entity={employee}/>} />
         <Redirect from='/' to='departments'/>
       </Switch>
     </Container>

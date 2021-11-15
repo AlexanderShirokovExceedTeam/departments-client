@@ -41,14 +41,12 @@ const MainContainer = ({ entity }) => {
       setIsEdit(false);
       setIndexOfEdit('');
     }
-
+    // if (departments.find(item => item.name === entityObject.name) && !isEdit) {
+    //   console.log("ENTER UNIQUE NAME!");
+    //   departments.map(item => console.log(`item.name is`, item.name));
+    //   console.log(`entityObject.name`, entityObject.name);
     if (entityObject.label === 'Department') {
-      delete entityObject.departmentName;
-      if (departments.find(item => item.name === entityObject.name) && !isEdit) {
-        console.log("ENTER UNIQUE NAME!");
-        departments.map(item => console.log(`item.name is`, item.name));
-        console.log(`entityObject.name`, entityObject.name);
-      } else if (isEdit && entityObject.name) {
+      if (isEdit && entityObject.name) {
         departments.splice(indexOfEdit, 1, entityObject);
         setDepartments([...departments]);
         closeModal();
@@ -58,13 +56,14 @@ const MainContainer = ({ entity }) => {
       } else {
         console.log("NAME IS REQUIRED!")
       }
-    } else if (entityObject.label === 'Employee') {
-      if (isEdit && entityObject.email && entityObject.name && entityObject.age && entityObject.position) {
-        employee.splice(indexOfEdit, 1, entityObject);
+    } else {
+      const tempEmployee = { ...entityObject, departmentName: currentDepartment}
+      if (isEdit && tempEmployee.email && tempEmployee.name && tempEmployee.age && tempEmployee.position) {
+        employee.splice(indexOfEdit, 1, tempEmployee);
         setEmployee([...employee]);
         closeModal();
-      } else if (!isEdit && entityObject.email && entityObject.name && entityObject.age && entityObject.position) {
-        setEmployee([...employee, entityObject]);
+      } else if (!isEdit && tempEmployee.email && tempEmployee.name && tempEmployee.age && tempEmployee.position) {
+        setEmployee([...employee, tempEmployee]);
         closeModal();
       } else {
         console.log("FILL ALL REQUIRED FIELDS!")
@@ -88,15 +87,15 @@ const MainContainer = ({ entity }) => {
       <SideBar />
       <Container className="content">
         <HeaderComponent
-          openModal={() => setOpenModal(true)}
+          openModal={setOpenModal}
           label={entity.label}
         />
         <RenderEntity
           entity={entity}
           departments={departments}
           employee={employee}
-          openModal={() => setOpenModal(true)}
-          setIsEdit={() => setIsEdit(true)}
+          openModal={setOpenModal}
+          setIsEdit={setIsEdit}
           okHandler={okHandler}
           formObject={formObject}
           setFormObject={setFormObject}
@@ -109,13 +108,13 @@ const MainContainer = ({ entity }) => {
       <ModalAddEdit
         departments={departments}
         openModal={openModal}
-        closeHandler={() => setOpenModal(false)}
-        entity={entity}
+        closeHandler={setOpenModal}
+        entityLabel={entity.label}
         isEdit={isEdit}
         okHandler={okHandler}
         formObject={formObject}
         setFormObject={setFormObject}
-        currentDepartment={currentDepartment}
+        setIsEdit={setIsEdit}
       />
     </Container>
   )
