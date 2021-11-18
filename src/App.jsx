@@ -1,5 +1,5 @@
 import React from "react";
-import { Switch, Route, Redirect } from "react-router-dom";
+import { Switch, Route, Redirect } from "react-router-dom"; //  useParams get departmentID
 import { Container, Typography } from "@mui/material";
 import MainContainer from "./components/mainContainer/mainContainer";
 import "./App.scss";
@@ -15,6 +15,11 @@ const App = () => {
           path="/departments"
           render={() => <MainContainer entity="Department" />}
         />
+        <Route
+          path="/department/:id"
+          render={() => <MainContainer entity="Employee" />}
+        />
+        
         <Route
           path="/employee"
           render={() => <MainContainer entity="Employee" />}

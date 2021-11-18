@@ -12,44 +12,38 @@ const RenderEntity = ({
   setIsEdit,
   openModal,
   setFormObject,
-  setIndexOfEdit,
   deleteEntity,
   currentDepartment,
-  setCurrentDepartment,
   sortedEmployee,
   setSortedEmployee,
 }) => {
   const history = useHistory();
-  // const [sortedEmployee, setSortedEmployee] = useState([]);
 
-  // useEffect(() => {
-  //   setSortedEmployee([...employee.filter((currentEmployee) => currentEmployee.department === currentDepartment)]);
-  // }, [employee])
+  useEffect(() => {
+    if (currentDepartment) {
+      axios
+        .get(`http://localhost:8000/employees?department=${currentDepartment}`)
+        .then((res) => {
+          if (res) {
+            setSortedEmployee(res.data.data);
+          }
+        })
+        .catch((err) => {
+          console.log(`get employees error`, err);
+        });
+      }
+  }, [currentDepartment])
 
-  const handleEdit = (editedItem, index) => {
+  const handleEdit = (editedItem) => {
     setIsEdit(true);
     openModal(true);
     setFormObject(editedItem);
-    setIndexOfEdit(index);
   };
 
   const filterHandler = (departmentID) => {
-    console.log(`departmentID`, departmentID);
-    setCurrentDepartment(departmentID);
-    axios
-      .get(`http://localhost:8000/employees?department=${departmentID}`)
-      .then((res) => {
-        if (res) {
-          setSortedEmployee(res.data.data);
-        }
-      })
-      .catch((err) => {
-        console.log(`get employees error`, err);
-      });
-    // setSortedEmployee([...employee.filter((currentEmployee) =>
-    //   currentEmployee.department === departmentID)]);
-    history.push("/employee");
+    history.push(`/department/${departmentID}`);
   };
+  
   return (
     <Container className="render-entity">
       {entity === "Department"
@@ -66,7 +60,7 @@ const RenderEntity = ({
                 <IconButton
                   type="Button"
                   onClick={(e) => {
-                    handleEdit(item, index);
+                    handleEdit(item);
                     e.stopPropagation();
                   }}
                 >
@@ -97,7 +91,7 @@ const RenderEntity = ({
                 <Typography>{item.position}</Typography>
                 <IconButton
                   type="Button"
-                  onClick={() => handleEdit(item, index)}
+                  onClick={() => handleEdit(item)}
                 >
                   <Edit />
                 </IconButton>
