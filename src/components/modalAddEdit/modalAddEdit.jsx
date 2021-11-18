@@ -6,35 +6,48 @@ import {
   DialogContent,
   DialogTitle,
   Container,
-  Typography
+  Typography,
 } from "@mui/material";
-import { TextValidator, SelectValidator, ValidatorForm } from "react-material-ui-form-validator";
+import {
+  TextValidator,
+  SelectValidator,
+  ValidatorForm,
+} from "react-material-ui-form-validator";
 import UserTextField from "../userTextField/userTextField";
-import './modalAddEdit.scss';
+import "./modalAddEdit.scss";
 
-const ModalAddEdit = ({ openModal, closeHandler, okHandler, entityLabel, isEdit, formObject, setFormObject, setIsEdit }) => {
+const ModalAddEdit = ({
+  openModal,
+  closeHandler,
+  okHandler,
+  entity,
+  isEdit,
+  formObject,
+  setFormObject,
+  setIsEdit,
+}) => {
   // const [selectDepartment, setSelectDepartment] = useState('');
   // const selectDepartmentHandler = (e) => {
   //   setSelectDepartment(e.target.value);
   //   setFormObject({ ...formObject, departmentName: e.target.value})
   // }
-  
+
   const setFieldHandler = (key, e) => {
-    setFormObject({ ...formObject, [key]: e.target.value })
-  }
+    setFormObject({ ...formObject, [key]: e.target.value });
+  };
 
   const onSubmit = (e, fObject) => {
     if (e.key === "Enter") {
-      okHandler(fObject)
-      setFormObject({})
+      okHandler(fObject);
+      setFormObject({});
     }
   };
-  
+
   return (
     <ValidatorForm
-      // ref="form"
-      // onSubmit={console.log('submit')}
-      // onError={errors => console.log(errors)}
+    // ref="form"
+    // onSubmit={console.log('submit')}
+    // onError={errors => console.log(errors)}
     >
       <Dialog
         aria-labelledby="scalable-modal"
@@ -42,18 +55,18 @@ const ModalAddEdit = ({ openModal, closeHandler, okHandler, entityLabel, isEdit,
         open={openModal}
         onClose={() => closeHandler(false)}
       >
-        <DialogTitle>{isEdit ? 'Edit' : 'Add'} {entityLabel}</DialogTitle>
+        <DialogTitle>
+          {isEdit ? "Edit" : "Add"}{" "}
+          {entity === "Employee" ? "employee" : "department"}
+        </DialogTitle>
         <DialogContent>
-          {
-            (entityLabel === 'Department') ?
+          {entity === "Department" ? (
             <Container
               component="form"
-              onKeyPress={(e) =>
-                onSubmit(e, { ...formObject, label: entityLabel })
-              }
+              onKeyPress={(e) => onSubmit(e, { ...formObject })}
             >
               <UserTextField
-                currentKey='name'
+                currentKey="name"
                 value={formObject.name}
                 type="text"
                 setFieldHandler={setFieldHandler}
@@ -62,24 +75,25 @@ const ModalAddEdit = ({ openModal, closeHandler, okHandler, entityLabel, isEdit,
                 required={true}
               />
               <UserTextField
-                currentKey='description'
+                currentKey="description"
                 value={formObject.description}
                 type="text"
                 setFieldHandler={setFieldHandler}
               />
-            </Container> :
+            </Container>
+          ) : (
             <Container component="form">
               <UserTextField
-                currentKey='email'
+                currentKey="email"
                 value={formObject.email}
                 type="email"
                 setFieldHandler={setFieldHandler}
-                validators={['isEmail']}
-                errorMessages={['email is not valid']}
+                validators={["isEmail"]}
+                errorMessages={["email is not valid"]}
                 required={true}
               />
               <UserTextField
-                currentKey='name'
+                currentKey="name"
                 value={formObject.name}
                 type="text"
                 setFieldHandler={setFieldHandler}
@@ -88,16 +102,19 @@ const ModalAddEdit = ({ openModal, closeHandler, okHandler, entityLabel, isEdit,
                 // errorMessages={['this field is required']}
               />
               <UserTextField
-                currentKey='age'
+                currentKey="age"
                 value={formObject.age}
                 type="number"
                 setFieldHandler={setFieldHandler}
-                validators={['minNumber:1', 'maxNumber:100']}
-                errorMessages={['value must be positive', 'value must be less or equal 100']}
+                validators={["minNumber:1", "maxNumber:100"]}
+                errorMessages={[
+                  "value must be positive",
+                  "value must be less or equal 100",
+                ]}
                 required={true}
               />
               <UserTextField
-                currentKey='position'
+                currentKey="position"
                 value={formObject.position}
                 type="text"
                 setFieldHandler={setFieldHandler}
@@ -129,27 +146,31 @@ const ModalAddEdit = ({ openModal, closeHandler, okHandler, entityLabel, isEdit,
               }
               </TextField> */}
             </Container>
-          }
+          )}
         </DialogContent>
         <DialogActions>
           <Button
             onClick={() => {
-            closeHandler(false)
-            setFormObject({})
-            setIsEdit(false)
-          }}
-          >Close</Button>
+              closeHandler(false);
+              setFormObject({});
+              setIsEdit(false);
+            }}
+          >
+            Close
+          </Button>
           <Button
             onClick={() => {
-              okHandler({ ...formObject, label: entityLabel })
-              setFormObject({})
+              okHandler({ ...formObject });
+              setFormObject({});
             }}
             type="onSubmit"
-          >{isEdit ? 'Edit' : 'Add'}</Button>
+          >
+            {isEdit ? "Edit" : "Add"}
+          </Button>
         </DialogActions>
       </Dialog>
     </ValidatorForm>
-  )
-}
+  );
+};
 
 export default ModalAddEdit;

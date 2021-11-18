@@ -6,11 +6,11 @@ import {
 } from '@mui/material';
 import './headerComponent.scss';
 
-const HeaderComponent = ({ openModal, label}) => {
+const HeaderComponent = ({ openModal, entity}) => {
   return (
     <Container className="content-header">
       <Typography variant='h5'>
-        {label}
+        {entity}
       </Typography>
       <Button
         variant="contained"
