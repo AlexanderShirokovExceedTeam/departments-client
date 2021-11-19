@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { Container } from '@mui/material';
+import { Container, Snackbar } from '@mui/material';
 import axios from 'axios';
 import SideBar from '../sidebar/sideBar';
 import HeaderComponent from '../headerComponent/headerComponent';
@@ -15,6 +15,8 @@ const MainContainer = ({ entity }) => {
   const [employee, setEmployee] = useState([]);
   const [formObject, setFormObject] = useState(entity);
   const [sortedEmployee, setSortedEmployee] = useState([]);
+  const [isSnackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackmessage, setSnackmessage ] = useState('');
   
   let { id } = useParams();
   
@@ -61,7 +63,7 @@ const MainContainer = ({ entity }) => {
     if (entity === "Department") {
       const { _id, name, description } = entityObject;
       if (isEdit && name) {
-        axios.patch('http://localhost:8000/department/edit', entityObject)
+        axios.patch(`http://localhost:8000/department/edit/${_id}`, entityObject)
           .then(res => {
             if (res) {              
               const editedDepartments = departments.map(item => {
@@ -93,7 +95,7 @@ const MainContainer = ({ entity }) => {
       const tempEmployee = { ...entityObject, department: id }
       const { _id, email, name, age, position } = tempEmployee;
       if (isEdit && email && name && age && position) {
-        axios.patch('http://localhost:8000/employee/edit', tempEmployee)
+        axios.patch(`http://localhost:8000/employee/edit/${_id}`, tempEmployee)
         .then(res => {
           if (res) {
             const tempSortedEmployee = sortedEmployee.map(item => {
@@ -127,24 +129,31 @@ const MainContainer = ({ entity }) => {
   const deleteEntity = (objectForDelete, indexOfDelete, idOfDelete) => {
     if (entity === "Department") {
       axios
-        .delete(`http://localhost:8000/department/delete?_id=${idOfDelete}`)
-        .then(() => {
+        .delete(`http://localhost:8000/department/delete/${idOfDelete}`)
+        .then((res) => {
+          if (res.data.status !== 200) {
+            setSnackmessage('Cannot delete department with employee');
+            return setSnackbarOpen(true)
+          }
+          console.log(res.data.status);
           departments.splice(indexOfDelete, 1);
           setDepartments([...departments]);
         })
-        .catch((err) => {
-          console.log(`delete department error`, err);
+        .catch(() => {
+          setSnackmessage('Cannot delete department with employee');
+          setSnackbarOpen(true)
         });
     } else {
       axios
-        .delete(`http://localhost:8000/employee/delete?_id=${idOfDelete}`)
+        .delete(`http://localhost:8000/employee/delete/${idOfDelete}`)
         .then(() => {
           const index = sortedEmployee.indexOf(objectForDelete);
           sortedEmployee.splice(index, 1);
           setSortedEmployee([...sortedEmployee]);
         })
-        .catch((err) => {
-          console.log("delete employee error", err);
+        .catch(() => {
+          setSnackmessage('Delete employee error');
+          setSnackbarOpen(true)
         });
     }
   };
@@ -182,6 +191,16 @@ const MainContainer = ({ entity }) => {
         formObject={formObject}
         setFormObject={setFormObject}
         setIsEdit={setIsEdit}
+      />
+      <Snackbar
+        anchorOrigin={{
+          vertical: 'top',
+          horizontal: 'center'
+        }}
+        open={isSnackbarOpen}
+        autoHideDuration={2000}
+        onClose={() => setSnackbarOpen(false)}
+        message={snackmessage}
       />
     </Container>
   )

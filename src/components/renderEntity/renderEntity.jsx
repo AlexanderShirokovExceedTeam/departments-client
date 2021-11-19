@@ -22,7 +22,7 @@ const RenderEntity = ({
   useEffect(() => {
     if (currentDepartment) {
       axios
-        .get(`http://localhost:8000/employees?department=${currentDepartment}`)
+        .get(`http://localhost:8000/employees/${currentDepartment}`)
         .then((res) => {
           if (res) {
             setSortedEmployee(res.data.data);
@@ -46,64 +46,69 @@ const RenderEntity = ({
   
   return (
     <Container className="render-entity">
-      {entity === "Department"
-        ? departments.map((item, index) => {
-            const renderedEmployee = sortedEmployee;
-            return (
-              <Container
-                key={`dep-prop-${index}`}
-                className={`department department-${index}`}
-                onClick={() => filterHandler(item._id)}
+      {entity === "Department" ? (
+        departments.map((item, index) => {
+          const renderedEmployee = sortedEmployee;
+          return (
+            <Container
+              key={`dep-prop-${index}`}
+              className={`department department-${index}`}
+              onClick={() => filterHandler(item._id)}
+            >
+              <Typography>{item.name}</Typography>
+              <Typography>{item.description}</Typography>
+              <IconButton
+                type="Button"
+                onClick={(e) => {
+                  handleEdit(item);
+                  e.stopPropagation();
+                }}
               >
-                <Typography>{item.name}</Typography>
-                <Typography>{item.description}</Typography>
-                <IconButton
-                  type="Button"
-                  onClick={(e) => {
-                    handleEdit(item);
-                    e.stopPropagation();
-                  }}
-                >
-                  <Edit />
-                </IconButton>
-                <IconButton
-                  type="Button"
-                  onClick={(e) => {
-                    deleteEntity(item, index, item._id);
-                    e.stopPropagation();
-                  }}
-                  // disabled={renderedEmployee.length !== 0}
-                >
-                  <Delete />
-                </IconButton>
-              </Container>
-            );
-          })
-        : sortedEmployee.map((item, index) => {
-            return (
-              <Container
-                key={`empl-prop-${index}`}
-                className={`employee employee-${index}`}
+                <Edit />
+              </IconButton>
+              <IconButton
+                type="Button"
+                onClick={(e) => {
+                  deleteEntity(item, index, item._id);
+                  e.stopPropagation();
+                }}
+                // disabled={renderedEmployee.length !== 0}
               >
-                <Typography>{item.email}</Typography>
-                <Typography>{item.name}</Typography>
-                <Typography>{item.age}</Typography>
-                <Typography>{item.position}</Typography>
-                <IconButton
-                  type="Button"
-                  onClick={() => handleEdit(item)}
-                >
-                  <Edit />
-                </IconButton>
-                <IconButton
-                  type="Button"
-                  onClick={() => deleteEntity(item, index, item._id)}
-                >
-                  <Delete />
-                </IconButton>
-              </Container>
-            );
-          })}
+                <Delete />
+              </IconButton>
+            </Container>
+          );
+        })
+      ) : sortedEmployee.length > 0 ? (
+        sortedEmployee.map((item, index) => {
+          return (
+            <Container
+              key={`empl-prop-${index}`}
+              className={`employee employee-${index}`}
+            >
+              <Typography>{item.email}</Typography>
+              <Typography>{item.name}</Typography>
+              <Typography>{item.age}</Typography>
+              <Typography>{item.position}</Typography>
+              <IconButton type="Button" onClick={() => handleEdit(item)}>
+                <Edit />
+              </IconButton>
+              <IconButton
+                type="Button"
+                onClick={() => deleteEntity(item, index, item._id)}
+              >
+                <Delete />
+              </IconButton>
+            </Container>
+          );
+        })
+      ) : (
+        <Container className="empty-sorted-employee">
+          <Typography align="center" color="lightgray" variant="h3">
+            Empty
+          </Typography>
+        </Container>
+      )}
     </Container>
   );
 };
