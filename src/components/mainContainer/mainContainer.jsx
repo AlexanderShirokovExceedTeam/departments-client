@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Container } from '@mui/material';
+import { useParams } from 'react-router-dom';
+import { Container, Snackbar } from '@mui/material';
 import axios from 'axios';
 import SideBar from '../sidebar/sideBar';
 import HeaderComponent from '../headerComponent/headerComponent';
@@ -10,12 +11,14 @@ import './mainContainer.scss';
 const MainContainer = ({ entity }) => {
   const [openModal, setOpenModal] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
-  const [indexOfEdit, setIndexOfEdit] = useState('')
   const [departments, setDepartments] = useState([]);
   const [employee, setEmployee] = useState([]);
   const [formObject, setFormObject] = useState(entity);
-  const [currentDepartment, setCurrentDepartment] = useState('');
   const [sortedEmployee, setSortedEmployee] = useState([]);
+  const [isSnackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackmessage, setSnackmessage ] = useState('');
+  
+  let { id } = useParams();
   
   useEffect(() => {
     axios
@@ -28,18 +31,26 @@ const MainContainer = ({ entity }) => {
       .catch((err) => {
         console.log(`get departments error`, err);
       });
-
-    axios
-      .get(`http://localhost:8000/employees?department=${currentDepartment}`)
-      .then((res) => {
-        if (res) {
-          setSortedEmployee(res.data.data);
-        }
-      })
-      .catch((err) => {
-        console.log(`get employees error`, err);
-      });
+      
+    // if (departmentID) {
+    //   axios
+    //   .get(`http://localhost:8000/employees?department=${departmentID}`)
+    //   .then((res) => {
+    //     if (res) {
+    //       setSortedEmployee(res.data.data);
+    //     }
+    //   })
+    //   .catch((err) => {
+    //     console.log(`get employees error`, err);
+    //   });
+    // }
   }, []);
+
+  useEffect(() => {
+    if (entity === "Department") {
+      setSortedEmployee([]);
+    }
+  }, [entity])
 
   const okHandler = (entityObject) => {
 
@@ -48,16 +59,20 @@ const MainContainer = ({ entity }) => {
     const closeModal = () => {
       setOpenModal(false);
       setIsEdit(false);
-      setIndexOfEdit('');
     }
     if (entity === "Department") {
       const { _id, name, description } = entityObject;
       if (isEdit && name) {
-        axios.patch('http://localhost:8000/department/edit', entityObject)
+        axios.patch(`http://localhost:8000/department/edit/${_id}`, entityObject)
           .then(res => {
-            if (res) {
-              console.log(`res.data.data`, res.data.data)
-              setDepartments(res.data.data)
+            if (res) {              
+              const editedDepartments = departments.map(item => {
+                if (item._id === res.data._id) {
+                  return res.data;
+                }
+                return item;
+              });              
+              setDepartments(editedDepartments);
             }
           }).catch(err => {
             console.log(`edit department error`, err);
@@ -77,15 +92,19 @@ const MainContainer = ({ entity }) => {
         console.log("NAME IS REQUIRED!")
       }
     } else {
-      const tempEmployee = { ...entityObject, department: currentDepartment }
+      const tempEmployee = { ...entityObject, department: id }
       const { _id, email, name, age, position } = tempEmployee;
       if (isEdit && email && name && age && position) {
-        axios.patch('http://localhost:8000/employee/edit', tempEmployee)
+        axios.patch(`http://localhost:8000/employee/edit/${_id}`, tempEmployee)
         .then(res => {
           if (res) {
-            // setSortedEmployee(res.data.data);
-            // sortedEmployee.splice(indexOfEdit, 1, tempEmployee);
-            // setSortedEmployee([...sortedEmployee, res.data.data]);
+            const tempSortedEmployee = sortedEmployee.map(item => {
+              if (item._id === res.data._id) {
+                return res.data;
+              }
+              return item;
+            });              
+            setSortedEmployee(tempSortedEmployee);
           }
         }).catch(err => {
           console.log('edit employee error', err);
@@ -110,28 +129,35 @@ const MainContainer = ({ entity }) => {
   const deleteEntity = (objectForDelete, indexOfDelete, idOfDelete) => {
     if (entity === "Department") {
       axios
-        .delete(`http://localhost:8000/department/delete?_id=${idOfDelete}`)
-        .then(() => {
+        .delete(`http://localhost:8000/department/delete/${idOfDelete}`)
+        .then((res) => {
+          if (res.data.status !== 200) {
+            setSnackmessage('Cannot delete department with employee');
+            return setSnackbarOpen(true)
+          }
+          console.log(res.data.status);
           departments.splice(indexOfDelete, 1);
           setDepartments([...departments]);
         })
-        .catch((err) => {
-          console.log(`delete department error`, err);
+        .catch(() => {
+          setSnackmessage('Cannot delete department with employee');
+          setSnackbarOpen(true)
         });
     } else {
       axios
-        .delete(`http://localhost:8000/employee/delete?_id=${idOfDelete}`)
+        .delete(`http://localhost:8000/employee/delete/${idOfDelete}`)
         .then(() => {
           const index = sortedEmployee.indexOf(objectForDelete);
           sortedEmployee.splice(index, 1);
           setSortedEmployee([...sortedEmployee]);
         })
-        .catch((err) => {
-          console.log("delete employee error", err);
+        .catch(() => {
+          setSnackmessage('Delete employee error');
+          setSnackbarOpen(true)
         });
     }
   };
-console.log(`sortedEmployee`, sortedEmployee)
+  
   return (
     <Container className="main-container">
       <SideBar />
@@ -149,10 +175,8 @@ console.log(`sortedEmployee`, sortedEmployee)
           okHandler={okHandler}
           formObject={formObject}
           setFormObject={setFormObject}
-          setIndexOfEdit={setIndexOfEdit}
           deleteEntity={deleteEntity}
-          currentDepartment={currentDepartment}
-          setCurrentDepartment={setCurrentDepartment}
+          currentDepartment={id}
           sortedEmployee={sortedEmployee}
           setSortedEmployee={setSortedEmployee}
         />
@@ -167,6 +191,16 @@ console.log(`sortedEmployee`, sortedEmployee)
         formObject={formObject}
         setFormObject={setFormObject}
         setIsEdit={setIsEdit}
+      />
+      <Snackbar
+        anchorOrigin={{
+          vertical: 'top',
+          horizontal: 'center'
+        }}
+        open={isSnackbarOpen}
+        autoHideDuration={2000}
+        onClose={() => setSnackbarOpen(false)}
+        message={snackmessage}
       />
     </Container>
   )

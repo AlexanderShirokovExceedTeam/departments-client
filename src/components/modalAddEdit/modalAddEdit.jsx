@@ -26,12 +26,6 @@ const ModalAddEdit = ({
   setFormObject,
   setIsEdit,
 }) => {
-  // const [selectDepartment, setSelectDepartment] = useState('');
-  // const selectDepartmentHandler = (e) => {
-  //   setSelectDepartment(e.target.value);
-  //   setFormObject({ ...formObject, departmentName: e.target.value})
-  // }
-
   const setFieldHandler = (key, e) => {
     setFormObject({ ...formObject, [key]: e.target.value });
   };
@@ -120,31 +114,6 @@ const ModalAddEdit = ({
                 setFieldHandler={setFieldHandler}
                 required={true}
               />
-              {/* <TextField
-                margin="dense"
-                className="departmentField"
-                name="inputDepartment"
-                variant="outlined"
-                required
-                fullWidth
-                id="inputDepartment"
-                value={isEdit ? formObject.departmentName : selectDepartment}
-                select
-                label="departmentName"    //  if (isEdit) value = ''
-                type="text"
-                onChange={(e) => selectDepartmentHandler(e)}
-                SelectProps={{
-                  native: true,
-                }}
-              >
-              {
-                departments.map((option) => (
-                  <option key={option.name} value={option.name}>
-                    {option.name}
-                  </option>
-                ))
-              }
-              </TextField> */}
             </Container>
           )}
         </DialogContent>

@@ -16,7 +16,12 @@ const App = () => {
           render={() => <MainContainer entity="Department" />}
         />
         <Route
-          path="/employee"
+          path="/department/:id"
+          render={() => <MainContainer entity="Employee" />}
+        />
+        
+        <Route
+          path="/employee/all"
           render={() => <MainContainer entity="Employee" />}
         />
         <Redirect from="/" to="departments" />
