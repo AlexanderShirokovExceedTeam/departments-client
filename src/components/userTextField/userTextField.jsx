@@ -1,9 +1,17 @@
 import React from "react";
-import { TextField } from "@mui/material";
-import { TextValidator, SelectValidator, ValidatorForm } from "react-material-ui-form-validator";
-import './userTextField.scss';
 
-const UserTextField = ({ currentKey, value, type, setFieldHandler, validators, errorMessages, required }) => {
+import { TextValidator } from "react-material-ui-form-validator";
+import "./userTextField.scss";
+
+const UserTextField = ({
+  currentKey,
+  value,
+  type,
+  setFieldHandler,
+  validators,
+  errorMessages,
+  required,
+}) => {
   return (
     // <TextField
     //   // required={true}
@@ -31,7 +39,7 @@ const UserTextField = ({ currentKey, value, type, setFieldHandler, validators, e
       validators={validators}
       errorMessages={errorMessages}
     />
-  )
-}
+  );
+};
 
 export default UserTextField;

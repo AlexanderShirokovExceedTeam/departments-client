@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React from "react";
+
 import {
   Button,
   Dialog,
@@ -6,13 +7,9 @@ import {
   DialogContent,
   DialogTitle,
   Container,
-  Typography,
 } from "@mui/material";
-import {
-  TextValidator,
-  SelectValidator,
-  ValidatorForm,
-} from "react-material-ui-form-validator";
+import { ValidatorForm } from "react-material-ui-form-validator";
+
 import UserTextField from "../userTextField/userTextField";
 import "./modalAddEdit.scss";
 
@@ -39,9 +36,9 @@ const ModalAddEdit = ({
 
   return (
     <ValidatorForm
-    // ref="form"
-    // onSubmit={console.log('submit')}
-    // onError={errors => console.log(errors)}
+      // ref="form"
+      onSubmit={() => console.log("submit")}
+      // onError={errors => console.log(errors)}
     >
       <Dialog
         aria-labelledby="scalable-modal"

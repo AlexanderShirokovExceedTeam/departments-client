@@ -1,7 +1,9 @@
 import React from "react";
 import { Switch, Route, Redirect } from "react-router-dom";
-import { Container, Typography } from "@mui/material";
+
 import MainContainer from "./components/mainContainer/mainContainer";
+
+import { Container, Typography } from "@mui/material";
 import "./App.scss";
 
 const App = () => {
@@ -19,7 +21,6 @@ const App = () => {
           path="/department/:id"
           render={() => <MainContainer entity="Employee" />}
         />
-        
         <Route
           path="/employee/all"
           render={() => <MainContainer entity="Employee" />}
