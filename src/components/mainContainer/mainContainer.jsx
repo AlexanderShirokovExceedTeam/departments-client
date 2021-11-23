@@ -8,7 +8,8 @@ import HeaderComponent from "../headerComponent/headerComponent";
 import RenderEntity from "../renderEntity/renderEntity";
 import ModalAddEdit from "../modalAddEdit/modalAddEdit";
 
-import { Container, Snackbar } from "@mui/material";
+import { Container, Snackbar, Typography } from "@mui/material";
+
 import "./mainContainer.scss";
 
 const MainContainer = ({ entity }) => {
@@ -164,47 +165,52 @@ const MainContainer = ({ entity }) => {
   };
 
   return (
-    <Container className="main-container">
-      <SideBar />
-      <Container className="content">
-        <HeaderComponent openModal={setOpenModal} entity={entity} />
-        <RenderEntity
-          entity={entity}
+    <>
+      <Typography className="header" variant="h1">
+        Department CMS
+      </Typography>      
+      <Container className="main-container">      
+        <SideBar />
+        <Container className="content">
+          <HeaderComponent openModal={setOpenModal} entity={entity} />
+          <RenderEntity
+            entity={entity}
+            departments={departments}
+            employee={employee}
+            openModal={setOpenModal}
+            setIsEdit={setIsEdit}
+            okHandler={okHandler}
+            formObject={formObject}
+            setFormObject={setFormObject}
+            deleteEntity={deleteEntity}
+            currentDepartment={id}
+            sortedEmployee={sortedEmployee}
+            setSortedEmployee={setSortedEmployee}
+          />
+        </Container>
+        <ModalAddEdit
           departments={departments}
-          employee={employee}
-          openModal={setOpenModal}
-          setIsEdit={setIsEdit}
+          openModal={openModal}
+          closeHandler={setOpenModal}
+          entity={entity}
+          isEdit={isEdit}
           okHandler={okHandler}
           formObject={formObject}
           setFormObject={setFormObject}
-          deleteEntity={deleteEntity}
-          currentDepartment={id}
-          sortedEmployee={sortedEmployee}
-          setSortedEmployee={setSortedEmployee}
+          setIsEdit={setIsEdit}
+        />
+        <Snackbar
+          anchorOrigin={{
+            vertical: "top",
+            horizontal: "center",
+          }}
+          open={isSnackbarOpen}
+          autoHideDuration={2000}
+          onClose={() => setSnackbarOpen(false)}
+          message={snackmessage}
         />
       </Container>
-      <ModalAddEdit
-        departments={departments}
-        openModal={openModal}
-        closeHandler={setOpenModal}
-        entity={entity}
-        isEdit={isEdit}
-        okHandler={okHandler}
-        formObject={formObject}
-        setFormObject={setFormObject}
-        setIsEdit={setIsEdit}
-      />
-      <Snackbar
-        anchorOrigin={{
-          vertical: "top",
-          horizontal: "center",
-        }}
-        open={isSnackbarOpen}
-        autoHideDuration={2000}
-        onClose={() => setSnackbarOpen(false)}
-        message={snackmessage}
-      />
-    </Container>
+    </>
   );
 };
 

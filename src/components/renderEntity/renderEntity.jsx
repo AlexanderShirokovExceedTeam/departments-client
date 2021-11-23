@@ -49,7 +49,7 @@ const RenderEntity = ({
     <Container className="render-entity">
       {entity === "Department" ? (
         departments.map((item, index) => {
-          const renderedEmployee = sortedEmployee;
+          const renderedEmployee = sortedEmployee;  //  check it
           return (
             <Container
               key={`dep-prop-${index}`}
