@@ -2,6 +2,10 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 
 import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
+
+import { getDepartments, createDepartment, editDepartment, deleteDepartment } from "../../store/actionCreators/departmentsActionCreator";
+import { createEmployee, editEmployee, deleteEmployee } from "../../store/actionCreators/employeesActionCreator";
 
 import SideBar from "../sidebar/sideBar";
 import HeaderComponent from "../headerComponent/headerComponent";
@@ -17,26 +21,31 @@ const MainContainer = ({ entity }) => {
   const [isEdit, setIsEdit] = useState(false);
   const [departments, setDepartments] = useState([]);
   const [employee, setEmployee] = useState([]); //  if i need to render all employees
-  const [formObject, setFormObject] = useState(entity);
+  const [formObject, setFormObject] = useState({});
   const [sortedEmployee, setSortedEmployee] = useState([]);
   const [isSnackbarOpen, setSnackbarOpen] = useState(false);
   const [snackmessage, setSnackmessage] = useState("");
 
   let { id } = useParams();
-
+  const dispatch = useDispatch();
+  
+  // const departments = useSelector(state => state.reducerDepartments.departments)
+  
   useEffect(() => {
     axios
-      .get("http://localhost:8000/departments")
-      .then((res) => {
-        setDepartments(res.data.data);
-      })
-      .catch((err) => {
-        setSnackmessage("Can not load departments");
-        setSnackbarOpen(true);
-      });
+    .get("http://localhost:8000/departments")
+    .then((res) => {
+      setDepartments(res.data.data);
+      dispatch(getDepartments(res.data.data))
+    })
+    .catch((err) => {
+      setSnackmessage("Can not load departments");
+      setSnackbarOpen(true);
+    });
     //  get all employee if it needed
   }, []);
-
+  
+  
   useEffect(() => {
     if (entity === "Department") {
       setSortedEmployee([]);
@@ -48,11 +57,6 @@ const MainContainer = ({ entity }) => {
       if (typeof entityObject[key] === "string")
         entityObject[key] = entityObject[key].trim();
     });
-
-    const closeModal = () => {
-      setOpenModal(false);
-      setIsEdit(false);
-    };
 
     if (entity === "Department") {
       const { _id, name } = entityObject;
@@ -69,6 +73,7 @@ const MainContainer = ({ entity }) => {
                 return item;
               });
               setDepartments(editedDepartments);
+              dispatch(editDepartment(editedDepartments));
             }
           })
           .catch((err) => {
@@ -83,6 +88,7 @@ const MainContainer = ({ entity }) => {
           .then((res) => {
             if (res) {
               setDepartments([...departments, res.data.data]);
+              dispatch(createDepartment(res.data.data));
             }
           })
           .catch((err) => {
@@ -111,6 +117,7 @@ const MainContainer = ({ entity }) => {
                 return item;
               });
               setSortedEmployee(tempSortedEmployee);
+              // dispatch(editDepartment(tempSortedEmployee));
             }
           })
           .catch((err) => {
@@ -123,6 +130,7 @@ const MainContainer = ({ entity }) => {
           .then((res) => {
             if (res) {
               setSortedEmployee([...sortedEmployee, res.data.data]);
+              dispatch(createEmployee(res.data.data));
             }
           })
           .catch((err) => {
@@ -134,7 +142,8 @@ const MainContainer = ({ entity }) => {
         setSnackbarOpen(true);
       }
     }
-    closeModal();
+    setOpenModal(false);
+    setIsEdit(false);
   };
 
   const deleteEntity = (objectForDelete, indexOfDelete, idOfDelete) => {
@@ -144,6 +153,7 @@ const MainContainer = ({ entity }) => {
         .then((res) => {
           departments.splice(indexOfDelete, 1);
           setDepartments([...departments]);
+          dispatch(deleteDepartment(idOfDelete));
         })
         .catch(() => {
           setSnackmessage("Can not delete department with employee");
@@ -180,7 +190,7 @@ const MainContainer = ({ entity }) => {
             openModal={setOpenModal}
             setIsEdit={setIsEdit}
             okHandler={okHandler}
-            formObject={formObject}
+            formObject={formObject} //  remove
             setFormObject={setFormObject}
             deleteEntity={deleteEntity}
             currentDepartment={id}

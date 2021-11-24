@@ -27,8 +27,11 @@ const ModalAddEdit = ({
     setFormObject({ ...formObject, [key]: e.target.value });
   };
 
+  console.log(`formObject`, formObject)
+  
   const onSubmit = (e, fObject) => {
     if (e.key === "Enter") {
+      console.log(`fObject`, fObject)
       okHandler(fObject);
       setFormObject({});
     }

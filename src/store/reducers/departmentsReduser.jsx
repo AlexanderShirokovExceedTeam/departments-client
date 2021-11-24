@@ -1,35 +1,37 @@
+import { types } from "../actions/departmentsActions";
+
 const initialState = {
-  departments: [],  //  get it from database?
-}
+  departments: [],
+};
 
 export const reducerDepartments = (state = initialState, action) => {
-  const { departments } = state;
-  
   switch (action.type) {
-    case "GET_DEPARTMENTS":
+    case types.GET_DEPARTMENTS:
       return {
         ...state,
-        Department: action.department,    //
-        Description: action.description,  //
+        departments: action.payload,
       };
-    case "ADD_DEPARTMENT":
+    case types.ADD_DEPARTMENT:
       return {
         ...state,
-        Department: action.department,
-        Description: action.description,
+        departments: [...state.departments, action.payload],
       };
-    case "EDIT_DEPARTMENT":
+    case types.EDIT_DEPARTMENT:
       return {
         ...state,
-        Department: action.department,
-        Description: action.description,
+        name: action.department,
+        departments: [...action.payload],
+        // departments: state.departments.map((item) => {
+        //   return item._id === action.payload._id ? action.payload : item;
+        // }),
       };
-    case "DELETE_DEPARTMENT":
+    case types.DELETE_DEPARTMENT:
       return {
         ...state,
-        Department: action.department,    //
-        Description: action.description,  //
-      };    
+        departments: state.departments.filter(
+          (department) => department._id !== action.payload
+        ),
+      };
     default:
       return state;
   }

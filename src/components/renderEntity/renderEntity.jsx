@@ -2,6 +2,9 @@ import React, { useEffect } from "react";
 import { useHistory } from "react-router-dom";
 
 import axios from "axios";
+import { useDispatch } from "react-redux";
+
+import { getEmployees } from "../../store/actionCreators/employeesActionCreator";
 
 import { Container, Typography, IconButton } from "@mui/material";
 import { Edit, Delete } from "@mui/icons-material";
@@ -19,6 +22,7 @@ const RenderEntity = ({
   setSortedEmployee,
 }) => {
   const history = useHistory();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (currentDepartment) {
@@ -27,6 +31,7 @@ const RenderEntity = ({
         .then((res) => {
           if (res) {
             setSortedEmployee(res.data.data);
+            dispatch(getEmployees(res.data.data));
           }
         })
         .catch((err) => {

@@ -1,4 +1,6 @@
-import { useDispatch, useSelector } from "react-redux";
-
-const dispatch = useDispatch();
-const employees = useSelector(state => state.employees)
+export const types = {
+  GET_EMPLOYEES: "GET_EMPLOYEES",
+  ADD_EMPLOYEE: "ADD_EMPLOYEE",
+  EDIT_EMPLOYEE: "EDIT_EMPLOYEE",
+  DELETE_EMPLOYEE: "DELETE_EMPLOYEE",
+}
