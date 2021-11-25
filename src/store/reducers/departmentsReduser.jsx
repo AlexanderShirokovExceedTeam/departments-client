@@ -1,4 +1,4 @@
-import { types } from "../actions/departmentsActions";
+import { types } from "../actionTypes/departmentsActionTypes";
 
 const initialState = {
   departments: [],
@@ -19,11 +19,7 @@ export const reducerDepartments = (state = initialState, action) => {
     case types.EDIT_DEPARTMENT:
       return {
         ...state,
-        name: action.department,
         departments: [...action.payload],
-        // departments: state.departments.map((item) => {
-        //   return item._id === action.payload._id ? action.payload : item;
-        // }),
       };
     case types.DELETE_DEPARTMENT:
       return {

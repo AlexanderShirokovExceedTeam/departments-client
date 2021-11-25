@@ -4,8 +4,8 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 
-import { getDepartments, createDepartment, editDepartment, deleteDepartment } from "../../store/actionCreators/departmentsActionCreator";
-import { createEmployee, editEmployee, deleteEmployee } from "../../store/actionCreators/employeesActionCreator";
+import { getDepartments, createDepartment, editDepartment, deleteDepartment } from "../../store/actionCreators/departmentsActions";
+import { createEmployee, editEmployee, deleteEmployee } from "../../store/actionCreators/employeesActions";
 
 import SideBar from "../sidebar/sideBar";
 import HeaderComponent from "../headerComponent/headerComponent";
@@ -20,7 +20,7 @@ const MainContainer = ({ entity }) => {
   const [openModal, setOpenModal] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
   const [departments, setDepartments] = useState([]);
-  const [employee, setEmployee] = useState([]); //  if i need to render all employees
+  const [employee, setEmployee] = useState([]);
   const [formObject, setFormObject] = useState({});
   const [sortedEmployee, setSortedEmployee] = useState([]);
   const [isSnackbarOpen, setSnackbarOpen] = useState(false);
@@ -28,8 +28,6 @@ const MainContainer = ({ entity }) => {
 
   let { id } = useParams();
   const dispatch = useDispatch();
-  
-  // const departments = useSelector(state => state.reducerDepartments.departments)
   
   useEffect(() => {
     axios
@@ -42,7 +40,6 @@ const MainContainer = ({ entity }) => {
       setSnackmessage("Can not load departments");
       setSnackbarOpen(true);
     });
-    //  get all employee if it needed
   }, []);
   
   
@@ -52,7 +49,7 @@ const MainContainer = ({ entity }) => {
     }
   }, [entity]);
 
-  const okHandler = (entityObject) => {
+  const submitForm = (entityObject) => {
     Object.keys(entityObject).map((key) => {
       if (typeof entityObject[key] === "string")
         entityObject[key] = entityObject[key].trim();
@@ -117,7 +114,7 @@ const MainContainer = ({ entity }) => {
                 return item;
               });
               setSortedEmployee(tempSortedEmployee);
-              // dispatch(editDepartment(tempSortedEmployee));
+              dispatch(editEmployee(tempSortedEmployee));
             }
           })
           .catch((err) => {
@@ -146,26 +143,27 @@ const MainContainer = ({ entity }) => {
     setIsEdit(false);
   };
 
-  const deleteEntity = (objectForDelete, indexOfDelete, idOfDelete) => {
+  const deleteEntity = (entity, entityIndex) => {
     if (entity === "Department") {
       axios
-        .delete(`http://localhost:8000/department/delete/${idOfDelete}`)
+        .delete(`http://localhost:8000/department/delete/${entity._id}`)
         .then((res) => {
-          departments.splice(indexOfDelete, 1);
+          departments.splice(entityIndex, 1);
           setDepartments([...departments]);
-          dispatch(deleteDepartment(idOfDelete));
+          dispatch(deleteDepartment(entity._id));
         })
         .catch(() => {
           setSnackmessage("Can not delete department with employee");
-          return setSnackbarOpen(true);
+          setSnackbarOpen(true);
         });
     } else {
       axios
-        .delete(`http://localhost:8000/employee/delete/${idOfDelete}`)
+        .delete(`http://localhost:8000/employee/delete/${entity._id}`)
         .then(() => {
-          const index = sortedEmployee.indexOf(objectForDelete);
+          const index = sortedEmployee.indexOf(entity);
           sortedEmployee.splice(index, 1);
           setSortedEmployee([...sortedEmployee]);
+          dispatch(deleteEmployee(entity._id));
         })
         .catch(() => {
           setSnackmessage("Can not find deleted employee");
@@ -186,25 +184,23 @@ const MainContainer = ({ entity }) => {
           <RenderEntity
             entity={entity}
             departments={departments}
-            employee={employee}
             openModal={setOpenModal}
             setIsEdit={setIsEdit}
-            okHandler={okHandler}
-            formObject={formObject} //  remove
             setFormObject={setFormObject}
             deleteEntity={deleteEntity}
             currentDepartment={id}
             sortedEmployee={sortedEmployee}
             setSortedEmployee={setSortedEmployee}
+            setSnackmessage={setSnackmessage}
+            setSnackbarOpen={setSnackbarOpen}
           />
         </Container>
         <ModalAddEdit
-          departments={departments}
           openModal={openModal}
           closeHandler={setOpenModal}
           entity={entity}
           isEdit={isEdit}
-          okHandler={okHandler}
+          submitForm={submitForm}
           formObject={formObject}
           setFormObject={setFormObject}
           setIsEdit={setIsEdit}

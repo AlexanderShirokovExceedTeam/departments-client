@@ -1,35 +1,34 @@
-import { types } from "../actions/employeesActions";
+import { types } from "../actionTypes/employeesActionTypes";
 
 const initialState = {
   employees: [],
-}
+};
 
 export const reducerEmployees = (state = initialState, action) => {
-  console.log(`action`, action)
   switch (action.type) {
     case types.GET_EMPLOYEES:
       return {
         ...state,
-        employees: action.payload
+        employees: action.payload,
       };
-      case types.ADD_EMPLOYEE: {
-      console.log(`state`, state)
+    case types.ADD_EMPLOYEE: {
       return {
         ...state,
         employees: [...state.employees, action.payload],
-      }};
+      };
+    }
     case types.EDIT_EMPLOYEE:
       return {
         ...state,
-        Department: action.department,
-        Description: action.description,
+        employees: [...action.payload],
       };
     case types.DELETE_EMPLOYEE:
       return {
         ...state,
-        Department: action.department,    //
-        Description: action.description,  //
-      };    
+        employees: state.employees.filter(
+          (employee) => employee._id !== action.payload
+        ),
+      };
     default:
       return state;
   }

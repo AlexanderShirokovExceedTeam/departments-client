@@ -4,10 +4,11 @@ import { useHistory } from "react-router-dom";
 import axios from "axios";
 import { useDispatch } from "react-redux";
 
-import { getEmployees } from "../../store/actionCreators/employeesActionCreator";
+import { getEmployees } from "../../store/actionCreators/employeesActions";
 
 import { Container, Typography, IconButton } from "@mui/material";
 import { Edit, Delete } from "@mui/icons-material";
+
 import "./renderEntity.scss";
 
 const RenderEntity = ({
@@ -20,6 +21,8 @@ const RenderEntity = ({
   currentDepartment,
   sortedEmployee,
   setSortedEmployee,
+  setSnackmessage,
+  setSnackbarOpen,
 }) => {
   const history = useHistory();
   const dispatch = useDispatch();
@@ -35,7 +38,8 @@ const RenderEntity = ({
           }
         })
         .catch((err) => {
-          console.log(`get employees error`, err);
+          setSnackmessage("Can not load employee");
+          setSnackbarOpen(true);
         });
     }
   }, [currentDepartment]);
@@ -46,15 +50,14 @@ const RenderEntity = ({
     setFormObject(editedItem);
   };
 
-  const filterHandler = (departmentID) => {
-    history.push(`/department/${departmentID}`);
+  const filterHandler = (departmentId) => {
+    history.push(`/department/${departmentId}`);
   };
 
   return (
     <Container className="render-entity">
       {entity === "Department" ? (
         departments.map((item, index) => {
-          const renderedEmployee = sortedEmployee;  //  check it
           return (
             <Container
               key={`dep-prop-${index}`}
@@ -75,7 +78,7 @@ const RenderEntity = ({
               <IconButton
                 type="Button"
                 onClick={(e) => {
-                  deleteEntity(item, index, item._id);
+                  deleteEntity(item, index);
                   e.stopPropagation();
                 }}
               >
@@ -100,7 +103,7 @@ const RenderEntity = ({
               </IconButton>
               <IconButton
                 type="Button"
-                onClick={() => deleteEntity(item, index, item._id)}
+                onClick={() => deleteEntity(item, index)}
               >
                 <Delete />
               </IconButton>

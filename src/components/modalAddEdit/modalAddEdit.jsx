@@ -11,12 +11,13 @@ import {
 import { ValidatorForm } from "react-material-ui-form-validator";
 
 import UserTextField from "../userTextField/userTextField";
+
 import "./modalAddEdit.scss";
 
 const ModalAddEdit = ({
   openModal,
   closeHandler,
-  okHandler,
+  submitForm,
   entity,
   isEdit,
   formObject,
@@ -26,23 +27,16 @@ const ModalAddEdit = ({
   const setFieldHandler = (key, e) => {
     setFormObject({ ...formObject, [key]: e.target.value });
   };
-
-  console.log(`formObject`, formObject)
   
   const onSubmit = (e, fObject) => {
     if (e.key === "Enter") {
-      console.log(`fObject`, fObject)
-      okHandler(fObject);
+      submitForm(fObject);
       setFormObject({});
     }
   };
 
   return (
-    <ValidatorForm
-      // ref="form"
-      onSubmit={() => console.log("submit")}
-      // onError={errors => console.log(errors)}
-    >
+    <ValidatorForm>
       <Dialog
         aria-labelledby="scalable-modal"
         className="scalable-modal"
@@ -64,8 +58,6 @@ const ModalAddEdit = ({
                 value={formObject.name}
                 type="text"
                 setFieldHandler={setFieldHandler}
-                // validators={['required']}
-                // errorMessages={['this field is required']}
                 required={true}
               />
               <UserTextField
@@ -92,8 +84,6 @@ const ModalAddEdit = ({
                 type="text"
                 setFieldHandler={setFieldHandler}
                 required={true}
-                // validators={['required']}
-                // errorMessages={['this field is required']}
               />
               <UserTextField
                 currentKey="age"
@@ -129,7 +119,7 @@ const ModalAddEdit = ({
           </Button>
           <Button
             onClick={() => {
-              okHandler({ ...formObject });
+              submitForm({ ...formObject });
               setFormObject({});
             }}
             type="onSubmit"
