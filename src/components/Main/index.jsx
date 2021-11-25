@@ -2,25 +2,24 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 
 import axios from "axios";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 
-import { getDepartments, createDepartment, editDepartment, deleteDepartment } from "../../store/actionCreators/departmentsActions";
-import { createEmployee, editEmployee, deleteEmployee } from "../../store/actionCreators/employeesActions";
+import { getDepartments, createDepartment, editDepartment, deleteDepartment } from "../../store/actions/departmentsActions";
+import { createEmployee, editEmployee, deleteEmployee } from "../../store/actions/employeesActions";
 
-import SideBar from "../sidebar/sideBar";
-import HeaderComponent from "../headerComponent/headerComponent";
-import RenderEntity from "../renderEntity/renderEntity";
-import ModalAddEdit from "../modalAddEdit/modalAddEdit";
+import SideBar from "../SideBar/index";
+import Header from "../Header/index";
+import RenderEntity from "../RenderEntity/index";
+import ModalForm from "../ModalForm/index";
 
 import { Container, Snackbar, Typography } from "@mui/material";
 
-import "./mainContainer.scss";
+import "./styles.scss";
 
-const MainContainer = ({ entity }) => {
+const Main = ({ entity }) => {
   const [openModal, setOpenModal] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
   const [departments, setDepartments] = useState([]);
-  const [employee, setEmployee] = useState([]);
   const [formObject, setFormObject] = useState({});
   const [sortedEmployee, setSortedEmployee] = useState([]);
   const [isSnackbarOpen, setSnackbarOpen] = useState(false);
@@ -180,7 +179,7 @@ const MainContainer = ({ entity }) => {
       <Container className="main-container">      
         <SideBar />
         <Container className="content">
-          <HeaderComponent openModal={setOpenModal} entity={entity} />
+          <Header openModal={setOpenModal} entity={entity} />
           <RenderEntity
             entity={entity}
             departments={departments}
@@ -195,7 +194,7 @@ const MainContainer = ({ entity }) => {
             setSnackbarOpen={setSnackbarOpen}
           />
         </Container>
-        <ModalAddEdit
+        <ModalForm
           openModal={openModal}
           closeHandler={setOpenModal}
           entity={entity}
@@ -220,4 +219,4 @@ const MainContainer = ({ entity }) => {
   );
 };
 
-export default MainContainer;
+export default Main;

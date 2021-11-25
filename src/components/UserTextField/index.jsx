@@ -2,8 +2,6 @@ import React from "react";
 
 import { TextValidator } from "react-material-ui-form-validator";
 
-import "./userTextField.scss";
-
 const UserTextField = ({
   currentKey,
   value,

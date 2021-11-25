@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 import { Container } from "@mui/material";
 
-import "./sideBar.scss";
+import "./styles.scss";
 
 const SideBar = () => {
   return (

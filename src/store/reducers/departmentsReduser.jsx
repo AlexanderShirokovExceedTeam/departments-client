@@ -1,4 +1,4 @@
-import { types } from "../actionTypes/departmentsActionTypes";
+import { types } from "../types/departmentActionTypes";
 
 const initialState = {
   departments: [],

@@ -1,4 +1,4 @@
-import { types } from "../actionTypes/employeesActionTypes";
+import { types } from "../types/employeeActionTypes";
 
 const initialState = {
   employees: [],
@@ -11,12 +11,11 @@ export const reducerEmployees = (state = initialState, action) => {
         ...state,
         employees: action.payload,
       };
-    case types.ADD_EMPLOYEE: {
+    case types.ADD_EMPLOYEE:
       return {
         ...state,
         employees: [...state.employees, action.payload],
       };
-    }
     case types.EDIT_EMPLOYEE:
       return {
         ...state,

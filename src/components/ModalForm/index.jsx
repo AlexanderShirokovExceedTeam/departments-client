@@ -10,11 +10,9 @@ import {
 } from "@mui/material";
 import { ValidatorForm } from "react-material-ui-form-validator";
 
-import UserTextField from "../userTextField/userTextField";
+import UserTextField from "../UserTextField/index";
 
-import "./modalAddEdit.scss";
-
-const ModalAddEdit = ({
+const ModalForm = ({
   openModal,
   closeHandler,
   submitForm,
@@ -132,4 +130,4 @@ const ModalAddEdit = ({
   );
 };
 
-export default ModalAddEdit;
+export default ModalForm;

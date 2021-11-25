@@ -4,12 +4,12 @@ import { useHistory } from "react-router-dom";
 import axios from "axios";
 import { useDispatch } from "react-redux";
 
-import { getEmployees } from "../../store/actionCreators/employeesActions";
+import { getEmployees } from "../../store/actions/employeesActions";
 
 import { Container, Typography, IconButton } from "@mui/material";
 import { Edit, Delete } from "@mui/icons-material";
 
-import "./renderEntity.scss";
+import "./styles.scss";
 
 const RenderEntity = ({
   entity,

@@ -1,7 +1,7 @@
 import React from "react";
 import { Switch, Route, Redirect, BrowserRouter as Router } from "react-router-dom";
 
-import MainContainer from "./components/mainContainer/mainContainer";
+import Main from "./components/Main/index";
 
 import { Container } from "@mui/material";
 
@@ -14,11 +14,11 @@ const App = () => {
         <Switch>
           <Route
             path="/departments"
-            render={() => <MainContainer entity="Department" />}
+            render={() => <Main entity="Department" />}
           />
           <Route
             path="/department/:id"
-            render={() => <MainContainer entity="Employee" />}
+            render={() => <Main entity="Employee" />}
           />
           <Redirect from="/" to="departments" />
         </Switch>

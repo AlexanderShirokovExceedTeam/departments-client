@@ -2,9 +2,9 @@ import React from "react";
 
 import { Container, Typography, Button } from "@mui/material";
 
-import "./headerComponent.scss";
+import "./styles.scss";
 
-const HeaderComponent = ({ openModal, entity }) => {
+const Header = ({ openModal, entity }) => {
   return (
     <Container className="content-header">
       <Typography variant="h5">{entity}</Typography>
@@ -19,4 +19,4 @@ const HeaderComponent = ({ openModal, entity }) => {
   );
 };
 
-export default HeaderComponent;
+export default Header;
