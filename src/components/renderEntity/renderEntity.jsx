@@ -1,6 +1,8 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
+import React, { useEffect } from "react";
 import { useHistory } from "react-router-dom";
+
+import axios from "axios";
+
 import { Container, Typography, IconButton } from "@mui/material";
 import { Edit, Delete } from "@mui/icons-material";
 import "./renderEntity.scss";
@@ -8,7 +10,6 @@ import "./renderEntity.scss";
 const RenderEntity = ({
   entity,
   departments,
-  employee,
   setIsEdit,
   openModal,
   setFormObject,
@@ -31,8 +32,8 @@ const RenderEntity = ({
         .catch((err) => {
           console.log(`get employees error`, err);
         });
-      }
-  }, [currentDepartment])
+    }
+  }, [currentDepartment]);
 
   const handleEdit = (editedItem) => {
     setIsEdit(true);
@@ -43,7 +44,7 @@ const RenderEntity = ({
   const filterHandler = (departmentID) => {
     history.push(`/department/${departmentID}`);
   };
-  
+
   return (
     <Container className="render-entity">
       {entity === "Department" ? (
@@ -72,7 +73,6 @@ const RenderEntity = ({
                   deleteEntity(item, index, item._id);
                   e.stopPropagation();
                 }}
-                // disabled={renderedEmployee.length !== 0}
               >
                 <Delete />
               </IconButton>
