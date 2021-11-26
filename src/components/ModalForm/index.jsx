@@ -23,9 +23,38 @@ const ModalForm = ({
   setIsEdit,
 }) => {
   const inputRef = useRef("ref");
-  const [errors, setErrors] = useState({});
+  const [errors, setErrors] = useState({}); //  or useState(false)
 
-  const setFieldHandler = (key, e) => {
+  const setFieldHandler = (key, e, isEdit, entity) => { //  I can try to validate data right here. Get isEdit as parameter, it may be needed
+    if (entity === "Department") {
+      switch (key) {
+        case "name":
+
+          break;
+        case "description":
+
+          break;
+          // default:
+          //   return false;
+      }
+    } else {
+      switch (inputName) {
+        case "email":
+
+          break;
+        case "name":
+
+          break;
+        case "age":
+
+          break;
+        case "position":
+
+          break;
+        // default:
+        //   return false;
+      }
+    }
     setFormObject({ ...formObject, [key]: e.target.value });
   };
 
@@ -35,13 +64,7 @@ const ModalForm = ({
       setFormObject({});
     }
   };
-
-  const formIsValid = () => {
-    const isValid = false;
-    //  logic of validation
-    return isValid;
-  }
-
+  
   return (
     <Dialog
       aria-labelledby="scalable-modal"
@@ -133,7 +156,7 @@ const ModalForm = ({
           </Button>
           <Button
             type="submit"
-            disabled={!formIsValid()}
+            // disabled={}
           >{isEdit ? "Edit" : "Add"}</Button>
         </DialogActions>
       </ValidatorForm>

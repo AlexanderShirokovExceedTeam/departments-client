@@ -11,6 +11,7 @@ const UserTextField = ({
   errorMessages,
   required,
 }) => {
+  console.log(`TextValidator`, TextValidator.isValid())
   return (
     <TextValidator
       margin="dense"
