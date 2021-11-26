@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef, useState } from "react";
 
 import {
   Button,
@@ -22,10 +22,13 @@ const ModalForm = ({
   setFormObject,
   setIsEdit,
 }) => {
+  const inputRef = useRef("ref");
+  const [errors, setErrors] = useState({});
+
   const setFieldHandler = (key, e) => {
     setFormObject({ ...formObject, [key]: e.target.value });
   };
-  
+
   const onSubmit = (e, fObject) => {
     if (e.key === "Enter") {
       submitForm(fObject);
@@ -33,18 +36,31 @@ const ModalForm = ({
     }
   };
 
+  const formIsValid = () => {
+    const isValid = false;
+    //  logic of validation
+    return isValid;
+  }
+
   return (
-    <ValidatorForm>
-      <Dialog
-        aria-labelledby="scalable-modal"
-        className="scalable-modal"
-        open={openModal}
-        onClose={() => closeHandler(false)}
+    <Dialog
+      aria-labelledby="scalable-modal"
+      className="scalable-modal"
+      open={openModal}
+      onClose={() => closeHandler(false)}
+    >
+      <DialogTitle>
+        {isEdit ? "Edit" : "Add"}{" "}
+        {entity === "Employee" ? "employee" : "department"}
+      </DialogTitle>
+      <ValidatorForm
+        ref={inputRef}
+        onSubmit={() => {
+          submitForm({ ...formObject });
+          setFormObject({});
+        }}
+        onError={(errors) => console.log(errors)}
       >
-        <DialogTitle>
-          {isEdit ? "Edit" : "Add"}{" "}
-          {entity === "Employee" ? "employee" : "department"}
-        </DialogTitle>
         <DialogContent>
           {entity === "Department" ? (
             <Container
@@ -116,17 +132,12 @@ const ModalForm = ({
             Close
           </Button>
           <Button
-            onClick={() => {
-              submitForm({ ...formObject });
-              setFormObject({});
-            }}
-            type="onSubmit"
-          >
-            {isEdit ? "Edit" : "Add"}
-          </Button>
+            type="submit"
+            disabled={!formIsValid()}
+          >{isEdit ? "Edit" : "Add"}</Button>
         </DialogActions>
-      </Dialog>
-    </ValidatorForm>
+      </ValidatorForm>
+    </Dialog>
   );
 };
 

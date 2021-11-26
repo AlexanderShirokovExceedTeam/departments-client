@@ -4,8 +4,17 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import { useDispatch } from "react-redux";
 
-import { getDepartments, createDepartment, editDepartment, deleteDepartment } from "../../store/actions/departmentsActions";
-import { createEmployee, editEmployee, deleteEmployee } from "../../store/actions/employeesActions";
+import {
+  getDepartments,
+  createDepartment,
+  editDepartment,
+  deleteDepartment,
+} from "../../store/actions/departmentsActions";
+import {
+  createEmployee,
+  editEmployee,
+  deleteEmployee,
+} from "../../store/actions/employeesActions";
 
 import SideBar from "../SideBar/index";
 import Header from "../Header/index";
@@ -27,21 +36,20 @@ const Main = ({ entity }) => {
 
   let { id } = useParams();
   const dispatch = useDispatch();
-  
+
   useEffect(() => {
     axios
-    .get("http://localhost:8000/departments")
-    .then((res) => {
-      setDepartments(res.data.data);
-      dispatch(getDepartments(res.data.data))
-    })
-    .catch((err) => {
-      setSnackmessage("Can not load departments");
-      setSnackbarOpen(true);
-    });
+      .get("http://localhost:8000/departments")
+      .then((res) => {
+        setDepartments(res.data.data);
+        dispatch(getDepartments(res.data.data));
+      })
+      .catch((err) => {
+        setSnackmessage("Can not load departments");
+        setSnackbarOpen(true);
+      });
   }, []);
-  
-  
+
   useEffect(() => {
     if (entity === "Department") {
       setSortedEmployee([]);
@@ -142,32 +150,61 @@ const Main = ({ entity }) => {
     setIsEdit(false);
   };
 
-  const deleteEntity = (entity, entityIndex) => {
-    if (entity === "Department") {
-      axios
-        .delete(`http://localhost:8000/department/delete/${entity._id}`)
-        .then((res) => {
-          departments.splice(entityIndex, 1);
-          setDepartments([...departments]);
-          dispatch(deleteDepartment(entity._id));
-        })
-        .catch(() => {
-          setSnackmessage("Can not delete department with employee");
-          setSnackbarOpen(true);
-        });
-    } else {
-      axios
-        .delete(`http://localhost:8000/employee/delete/${entity._id}`)
-        .then(() => {
-          const index = sortedEmployee.indexOf(entity);
-          sortedEmployee.splice(index, 1);
-          setSortedEmployee([...sortedEmployee]);
-          dispatch(deleteEmployee(entity._id));
-        })
-        .catch(() => {
-          setSnackmessage("Can not find deleted employee");
-          setSnackbarOpen(true);
-        });
+  const deleteEntity = (entityObject, entityIndex) => {
+    // if (entity === "Department") {
+    //   axios
+    //     .delete(`http://localhost:8000/department/delete/${entityObject._id}`)
+    //     .then((res) => {
+    //       departments.splice(entityIndex, 1);
+    //       setDepartments([...departments]);
+    //       dispatch(deleteDepartment(entityObject._id));
+    //     })
+    //     .catch(() => {
+    //       setSnackmessage("Can not delete department with employee");
+    //       setSnackbarOpen(true);
+    //     });
+    // } else {
+    //   axios
+    //     .delete(`http://localhost:8000/employee/delete/${entityObject._id}`)
+    //     .then(() => {
+    //       const index = sortedEmployee.indexOf(entityObject);
+    //       sortedEmployee.splice(index, 1);
+    //       setSortedEmployee([...sortedEmployee]);
+    //       dispatch(deleteEmployee(entityObject._id));
+    //     })
+    //     .catch(() => {
+    //       setSnackmessage("Can not find deleted employee");
+    //       setSnackbarOpen(true);
+    //     });
+    // }
+    switch (entity) {
+      case "Department":
+        axios
+          .delete(`http://localhost:8000/department/delete/${entityObject._id}`)
+          .then((res) => {
+            departments.splice(entityIndex, 1);
+            setDepartments([...departments]);
+            dispatch(deleteDepartment(entityObject._id));
+          })
+          .catch(() => {
+            setSnackmessage("Can not delete department with employee");
+            setSnackbarOpen(true);
+          });
+        break;
+      case "Employee":
+        axios
+          .delete(`http://localhost:8000/employee/delete/${entityObject._id}`)
+          .then(() => {
+            const index = sortedEmployee.indexOf(entityObject);
+            sortedEmployee.splice(index, 1);
+            setSortedEmployee([...sortedEmployee]);
+            dispatch(deleteEmployee(entityObject._id));
+          })
+          .catch(() => {
+            setSnackmessage("Can not find deleted employee");
+            setSnackbarOpen(true);
+          });
+        break;
     }
   };
 
@@ -175,8 +212,8 @@ const Main = ({ entity }) => {
     <>
       <Typography className="header" variant="h1">
         Department CMS
-      </Typography>      
-      <Container className="main-container">      
+      </Typography>
+      <Container className="main-container">
         <SideBar />
         <Container className="content">
           <Header openModal={setOpenModal} entity={entity} />

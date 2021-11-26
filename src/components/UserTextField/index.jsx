@@ -24,6 +24,7 @@ const UserTextField = ({
       name={currentKey}
       validators={validators}
       errorMessages={errorMessages}
+      name={currentKey}
     />
   );
 };
