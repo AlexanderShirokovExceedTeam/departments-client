@@ -1,30 +1,44 @@
 import React from "react";
 
 import { TextValidator } from "react-material-ui-form-validator";
+import { TextField } from "@mui/material";
 
 const UserTextField = ({
+  error,
+  helperText,
+  onChange,
   currentKey,
-  value,
+  defaultValue,
   type,
   setFieldHandler,
-  validators,
-  errorMessages,
-  required,
+  // validators,
+  // errorMessages,
 }) => {
-  console.log(`TextValidator`, TextValidator.isValid())
   return (
-    <TextValidator
+    // <TextValidator
+    // error={false}
+    //   margin="dense"
+    //   label={currentKey}
+    //   defaultValue={defaultValue}
+    //   type={type}
+    //   fullWidth
+    //   variant="standard"
+    //   onChange={(e) => setFieldHandler(currentKey, e)}
+    //   name={currentKey}
+    //   validators={validators}
+    //   errorMessages={errorMessages}
+    // />
+    <TextField
+      error={error}
+      helperText={helperText}
+      onChange={onChange}
       margin="dense"
       label={currentKey}
-      value={value}
+      defaultValue={defaultValue}
       type={type}
       fullWidth
-      required={required}
       variant="standard"
       onChange={(e) => setFieldHandler(currentKey, e)}
-      name={currentKey}
-      validators={validators}
-      errorMessages={errorMessages}
       name={currentKey}
     />
   );
