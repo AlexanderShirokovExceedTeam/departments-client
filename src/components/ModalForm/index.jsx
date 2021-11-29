@@ -7,11 +7,10 @@ import {
   DialogContent,
   DialogTitle,
   Container,
-  
+  TextField
 } from "@mui/material";
 import * as yup from "yup";
 import { useFormik } from "formik";
-import { ValidatorForm } from "react-material-ui-form-validator";
 
 import UserTextField from "../UserTextField/index";
 
@@ -21,10 +20,10 @@ const validationSchemaDepartment = yup.object().shape({
 });
 
 const validationSchemaEmployee = yup.object().shape({
-  email: yup.string().email('Invalid email').required('Field is required'),
-  name: yup.string().required('Field is required'),
-  age: yup.number().required('Field is required').positive().integer(),
-  position: yup.string().required('Field is required'),
+  Email: yup.string().email('Invalid email').required('Field is required'),
+  Name: yup.string().required('Field is required'),
+  Age: yup.number().required('Field is required').positive().integer(),
+  Position: yup.string().required('Field is required'),
 });
 
 const ModalForm = ({
@@ -50,20 +49,17 @@ const ModalForm = ({
   };
   
   const formik = useFormik({
-    initialValues: entity === "Department" ? {
+    initialValues: {
       name: formObject.name,
-      // name: "test",
       description: formObject.description,
-    } : {
-      email: formObject.email,
-      name: formObject.name,
-      age: formObject.age,
-      position: formObject.position,
     },
-    validationSchema: entity === "Department" ? validationSchemaDepartment : validationSchemaEmployee,
+    validationSchema: validationSchemaDepartment,
     onSubmit: (values) => {
       console.log(`values`, values);
-    }
+      submitForm({ ...values });
+      // submitForm({ ...formObject });
+      setFormObject({});
+    },
   })
 
   return (
@@ -78,45 +74,63 @@ const ModalForm = ({
         {entity === "Employee" ? "employee" : "department"}
       </DialogTitle>
       <form
-        noValidate
-        autoComplete="off" 
-        instantValidate
-        onSubmit={(e) => {
-          e.preventDefault();
-          formik.handleSubmit()
-          // submitForm({ ...formObject });
-          // setFormObject({});
-        }}
-        onError={(errors) => {
-          console.log("Validation error", errors)
-        }}
+        // onSubmit={(e) => {
+        //   e.preventDefault();
+        //   formik.handleSubmit(e);
+        //   // submitForm({ ...formObject });
+        //   // setFormObject({});
+        // }}
+        onSubmit={formik.handleSubmit}
       >
         <DialogContent>
           {entity === "Department" ? (
             <Container
               component="form"
-              // onKeyPress={(e) => onSubmit(e, { ...formObject })}
             >
-              <UserTextField
-                currentKey="name"
-                // defaultValue={formObject.name}
-                defaultValue={formik.values.name}
+              <TextField
+                fullWidth
+                margin="dense"
+                id="name"
+                name="name"
+                label="Name"
+                value={formik.values.name}
+                // value={formObject.name}
                 onChange={formik.handleChange}
-                type="text"
-                setFieldHandler={setFieldHandler}
-                // validators={['required']}
-                // errorMessages={['This field is required']}
+                // onChange={(e) => setFieldHandler("name", e)}
                 error={formik.touched.name && Boolean(formik.errors.name)}
                 helperText={formik.touched.name && formik.errors.name}
               />
-              <UserTextField
-                error={formik.touched.description && Boolean(formik.errors.description)}
-                currentKey="description"
-                // defaultValue={formObject.description}
-                defaultValue={formik.values.description}
+              {/* <UserTextField
+                currentKey="name"
+                // defaultValue={formObject.name}
+                value={formik.values.name}
+                onChange={formik.handleChange}
                 type="text"
                 setFieldHandler={setFieldHandler}
-              />
+                error={formik.touched.name && Boolean(formik.errors.name)}
+                helperText={formik.touched.name && formik.errors.name}
+              /> */}
+              <TextField
+                fullWidth
+                margin="dense"
+                id="description"
+                name="description"
+                label="Description"
+                value={formik.values.description}
+                // value={formObject.description}
+                onChange={formik.handleChange}
+                // onChange={(e) => setFieldHandler("Description", e)}
+                error={formik.touched.description && Boolean(formik.errors.description)}
+                helperText={formik.touched.description && formik.errors.description}
+                />
+                {/* <UserTextField
+                  error={formik.touched.description && Boolean(formik.errors.description)}
+                  currentKey="description"
+                  // defaultValue={formObject.description}
+                  value={formik.values.description}
+                  type="text"
+                  setFieldHandler={setFieldHandler}
+                /> */}
             </Container>
           ) : (
             <Container component="form">
@@ -126,9 +140,6 @@ const ModalForm = ({
                 defaultValue={formik.values.email}
                 type="email"
                 setFieldHandler={setFieldHandler}
-                // validators={['required', 'isEmail']}
-                // errorMessages={['This field is required', 'Email invalid']}
-                // required={true}
               />
               <UserTextField
                 currentKey="name"
@@ -136,9 +147,6 @@ const ModalForm = ({
                 defaultValue={formik.values.name}
                 type="text"
                 setFieldHandler={setFieldHandler}
-                // validators={['required']}
-                // errorMessages={['This field is required']}
-                // required={true}
               />
               <UserTextField
                 currentKey="age"
@@ -146,13 +154,6 @@ const ModalForm = ({
                 defaultValue={formik.values.age}
                 type="number"
                 setFieldHandler={setFieldHandler}
-                // validators={["required", "minNumber:1", "maxNumber:100"]}
-                // errorMessages={[
-                //   'This field is required',
-                //   "value must be positive",
-                //   "value must be less or equal 100",
-                // ]}
-                // required={true}
               />
               <UserTextField
                 currentKey="position"
@@ -160,9 +161,6 @@ const ModalForm = ({
                 defaultValue={formik.values.position}
                 type="text"
                 setFieldHandler={setFieldHandler}
-                // validators={['required']}
-                // errorMessages={['This field is required']}
-                // required={true}
               />
             </Container>
           )}

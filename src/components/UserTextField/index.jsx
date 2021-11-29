@@ -1,6 +1,5 @@
 import React from "react";
 
-import { TextValidator } from "react-material-ui-form-validator";
 import { TextField } from "@mui/material";
 
 const UserTextField = ({
@@ -11,23 +10,8 @@ const UserTextField = ({
   defaultValue,
   type,
   setFieldHandler,
-  // validators,
-  // errorMessages,
 }) => {
   return (
-    // <TextValidator
-    // error={false}
-    //   margin="dense"
-    //   label={currentKey}
-    //   defaultValue={defaultValue}
-    //   type={type}
-    //   fullWidth
-    //   variant="standard"
-    //   onChange={(e) => setFieldHandler(currentKey, e)}
-    //   name={currentKey}
-    //   validators={validators}
-    //   errorMessages={errorMessages}
-    // />
     <TextField
       error={error}
       helperText={helperText}
