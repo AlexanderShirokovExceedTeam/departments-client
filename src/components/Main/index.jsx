@@ -57,6 +57,8 @@ const Main = ({ entity }) => {
   }, [entity]);
 
   const submitForm = (entityObject) => {
+    console.log(`entityObject`, entityObject)
+    setFormObject(entityObject)
     Object.keys(entityObject).map((key) => {
       if (typeof entityObject[key] === "string")
         entityObject[key] = entityObject[key].trim();

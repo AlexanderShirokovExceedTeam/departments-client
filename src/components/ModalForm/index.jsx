@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import {
   Button,
@@ -20,10 +20,10 @@ const validationSchemaDepartment = yup.object().shape({
 });
 
 const validationSchemaEmployee = yup.object().shape({
-  Email: yup.string().email('Invalid email').required('Field is required'),
-  Name: yup.string().required('Field is required'),
-  Age: yup.number().required('Field is required').positive().integer(),
-  Position: yup.string().required('Field is required'),
+  email: yup.string().email('Invalid email').required('Field is required'),
+  name: yup.string().required('Field is required'),
+  age: yup.number().required('Field is required').positive().integer(),
+  position: yup.string().required('Field is required'),
 });
 
 const ModalForm = ({
@@ -36,28 +36,82 @@ const ModalForm = ({
   setFormObject,
   setIsEdit,
 }) => {
-  
-  const setFieldHandler = (key, e) => {
-    setFormObject({ ...formObject, [key]: e.target.value });
+  const [resetForm, setResetForm] = useState(formObject);
+
+  // useEffect(() => {
+
+  // }, [])
+
+  const setFieldHandler = (e) => {
+    // setFormObject({ ...formObject, [key]: e.target.value });
+    console.log(`e`, e.target.value);
+    console.log(`e`, e.target.name);
+    setFormObject({ ...formObject, [e.target.name]: e.target.value });
   };
-  
-  const onSubmit = (e, fObject) => {
-    if (e.key === "Enter") {
-      submitForm(fObject);
-      setFormObject({});
-    }
-  };
-  
-  const formik = useFormik({
+
+  // const onSubmit = (e, fObject) => {
+  //   if (e.key === "Enter") {
+  //     submitForm(fObject);
+  //     setFormObject({});
+  //   }
+  // };
+  console.log(`formObject__`, formObject)
+
+  const formikDepartment = useFormik({
     initialValues: {
       name: formObject.name,
       description: formObject.description,
     },
     validationSchema: validationSchemaDepartment,
-    onSubmit: (values) => {
+    onSubmit: (values, actions) => {
+      console.log(`values__`, values);
+
+      // setFormObject({ ...changedValues });
+      submitForm({
+        _id: formObject._id,
+        name: values.name,
+        description: values.description
+      });
+      //  set changed values to form
+      // actions.setFieldValue(formObject[])
+      // setFormObject({});
+      
+      actions.resetForm();
+
+      setFormObject({});
+    },
+    onReset: (() => {
+      setFormObject({});     
+    })
+
+  })
+
+  const formikEmployee = useFormik({
+    initialValues: {
+      email: formObject.email,
+      name: formObject.name,
+      age: formObject.age,
+      position: formObject.position,
+    },
+    validationSchema: validationSchemaEmployee,
+    onSubmit: (values, actions) => {
       console.log(`values`, values);
-      submitForm({ ...values });
-      // submitForm({ ...formObject });
+      // setFormObject({ ...values });      
+      submitForm({
+        _id: formObject._id,
+        email: values.email,
+        name: values.name,
+        age: values.age,
+        position: values.position,
+      });
+      actions.resetForm({
+        values: {
+          email: formObject.email,
+          name: formObject.name,
+          age: formObject.age,
+          position: formObject.position,
+        },
+      });
       setFormObject({});
     },
   })
@@ -74,13 +128,8 @@ const ModalForm = ({
         {entity === "Employee" ? "employee" : "department"}
       </DialogTitle>
       <form
-        // onSubmit={(e) => {
-        //   e.preventDefault();
-        //   formik.handleSubmit(e);
-        //   // submitForm({ ...formObject });
-        //   // setFormObject({});
-        // }}
-        onSubmit={formik.handleSubmit}
+        onSubmit={ entity === "Department" ? formikDepartment.handleSubmit : formikEmployee.handleSubmit }
+        onChange={(e) => setFieldHandler(e)}
       >
         <DialogContent>
           {entity === "Department" ? (
@@ -93,81 +142,94 @@ const ModalForm = ({
                 id="name"
                 name="name"
                 label="Name"
-                value={formik.values.name}
+                defaultValue={formObject.name}
+                value={formikDepartment.values.name}
                 // value={formObject.name}
-                onChange={formik.handleChange}
+                onChange={formikDepartment.handleChange}
                 // onChange={(e) => setFieldHandler("name", e)}
-                error={formik.touched.name && Boolean(formik.errors.name)}
-                helperText={formik.touched.name && formik.errors.name}
+                error={formikDepartment.touched.name && Boolean(formikDepartment.errors.name)}
+                helperText={formikDepartment.touched.name && formikDepartment.errors.name}
               />
-              {/* <UserTextField
-                currentKey="name"
-                // defaultValue={formObject.name}
-                value={formik.values.name}
-                onChange={formik.handleChange}
-                type="text"
-                setFieldHandler={setFieldHandler}
-                error={formik.touched.name && Boolean(formik.errors.name)}
-                helperText={formik.touched.name && formik.errors.name}
-              /> */}
               <TextField
                 fullWidth
                 margin="dense"
                 id="description"
                 name="description"
                 label="Description"
-                value={formik.values.description}
+                defaultValue={formObject.description}
+                value={formikDepartment.values.description}
                 // value={formObject.description}
-                onChange={formik.handleChange}
+                onChange={formikDepartment.handleChange}
                 // onChange={(e) => setFieldHandler("Description", e)}
-                error={formik.touched.description && Boolean(formik.errors.description)}
-                helperText={formik.touched.description && formik.errors.description}
-                />
-                {/* <UserTextField
-                  error={formik.touched.description && Boolean(formik.errors.description)}
-                  currentKey="description"
-                  // defaultValue={formObject.description}
-                  value={formik.values.description}
-                  type="text"
-                  setFieldHandler={setFieldHandler}
-                /> */}
+                error={formikDepartment.touched.description && Boolean(formikDepartment.errors.description)}
+                helperText={formikDepartment.touched.description && formikDepartment.errors.description}
+              />
             </Container>
           ) : (
             <Container component="form">
-              <UserTextField
-                currentKey="email"
-                // defaultValue={formObject.email}
-                defaultValue={formik.values.email}
-                type="email"
-                setFieldHandler={setFieldHandler}
+              <TextField
+                fullWidth
+                margin="dense"
+                id="email"
+                name="email"
+                label="Email"
+                defaultValue={formObject.email}
+                value={formikEmployee.values.email}
+                // value={formObject.description}
+                onChange={formikEmployee.handleChange}
+                // onChange={(e) => setFieldHandler("Description", e)}
+                error={formikEmployee.touched.email && Boolean(formikEmployee.errors.email)}
+                helperText={formikEmployee.touched.email && formikEmployee.errors.email}
               />
-              <UserTextField
-                currentKey="name"
-                // defaultValue={formObject.name}
-                defaultValue={formik.values.name}
-                type="text"
-                setFieldHandler={setFieldHandler}
+              <TextField
+                fullWidth
+                margin="dense"
+                id="name"
+                name="name"
+                label="Name"
+                defaultValue={formObject.name}
+                value={formikEmployee.values.name}
+                // value={formObject.description}
+                onChange={formikEmployee.handleChange}
+                // onChange={(e) => setFieldHandler("Description", e)}
+                error={formikEmployee.touched.name && Boolean(formikEmployee.errors.name)}
+                helperText={formikEmployee.touched.name && formikEmployee.errors.name}
               />
-              <UserTextField
-                currentKey="age"
-                // defaultValue={formObject.age}
-                defaultValue={formik.values.age}
-                type="number"
-                setFieldHandler={setFieldHandler}
+              <TextField
+                fullWidth
+                margin="dense"
+                id="age"
+                name="age"
+                label="Age"
+                defaultValue={formObject.age}
+                value={formikEmployee.values.age}
+                // value={formObject.description}
+                onChange={formikEmployee.handleChange}
+                // onChange={(e) => setFieldHandler("Description", e)}
+                error={formikEmployee.touched.age && Boolean(formikEmployee.errors.age)}
+                helperText={formikEmployee.touched.age && formikEmployee.errors.age}
               />
-              <UserTextField
-                currentKey="position"
-                // defaultValue={formObject.position}
-                defaultValue={formik.values.position}
-                type="text"
-                setFieldHandler={setFieldHandler}
-              />
+              <TextField
+                fullWidth
+                margin="dense"
+                id="position"
+                name="position"
+                label="Position"
+                defaultValue={formObject.position}
+                value={formikEmployee.values.position}
+                // value={formObject.description}
+                onChange={formikEmployee.handleChange}
+                // onChange={(e) => setFieldHandler("Description", e)}
+                error={formikEmployee.touched.position && Boolean(formikEmployee.errors.position)}
+                helperText={formikEmployee.touched.position && formikEmployee.errors.position}
+              />               
             </Container>
           )}
         </DialogContent>
         <DialogActions>
           <Button
             onClick={() => {
+              formikDepartment.handleReset();
               closeHandler(false);
               setFormObject({});
               setIsEdit(false);
