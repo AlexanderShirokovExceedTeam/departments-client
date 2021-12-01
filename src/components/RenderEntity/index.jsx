@@ -48,7 +48,6 @@ const RenderEntity = ({
     setIsEdit(true);
     openModal(true);
     setFormObject(editedItem);
-    // console.log('editedItem', editedItem);
   };
 
   const filterHandler = (departmentId) => {

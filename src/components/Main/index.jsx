@@ -29,13 +29,18 @@ const Main = ({ entity }) => {
   const [openModal, setOpenModal] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
   const [departments, setDepartments] = useState([]);
-  const [formObject, setFormObject] = useState({});
+  const [formObject, setFormObject] = useState(null);
   const [sortedEmployee, setSortedEmployee] = useState([]);
   const [isSnackbarOpen, setSnackbarOpen] = useState(false);
   const [snackmessage, setSnackmessage] = useState("");
 
   let { id } = useParams();
   const dispatch = useDispatch();
+
+  const handleCloseModal = () => {
+    setOpenModal(false);
+    setFormObject(null)
+  }
 
   useEffect(() => {
     axios
@@ -57,98 +62,98 @@ const Main = ({ entity }) => {
   }, [entity]);
 
   const submitForm = (entityObject) => {
-    console.log(`entityObject`, entityObject)
-    setFormObject(entityObject)
+    setFormObject(entityObject);
     Object.keys(entityObject).map((key) => {
       if (typeof entityObject[key] === "string")
         entityObject[key] = entityObject[key].trim();
     });
 
-    if (entity === "Department") {
-      const { _id, name } = entityObject;
-
-      if (isEdit && name) {
-        axios
-          .patch(`http://localhost:8000/department/edit/${_id}`, entityObject)
-          .then((res) => {
-            if (res) {
-              const editedDepartments = departments.map((item) => {
-                if (item._id === res.data._id) {
-                  return res.data;
-                }
-                return item;
-              });
-              setDepartments(editedDepartments);
-              dispatch(editDepartment(editedDepartments));
-            }
-          })
-          .catch((err) => {
-            setSnackmessage(
-              "Edit department error. Name is required and must be unique."
-            );
-            setSnackbarOpen(true);
-          });
-      } else if (!isEdit && name) {
-        axios
-          .post("http://localhost:8000/department/add", entityObject)
-          .then((res) => {
-            if (res) {
-              setDepartments([...departments, res.data.data]);
-              dispatch(createDepartment(res.data.data));
-            }
-          })
-          .catch((err) => {
-            setSnackmessage(
-              "Add department error. Name is required and must be unique."
-            );
-            setSnackbarOpen(true);
-          });
-      } else {
-        setSnackmessage("Error. Name is required.");
-        setSnackbarOpen(true);
-      }
-    } else {
-      const tempEmployee = { ...entityObject, department: id };
-      const { _id, email, name, age, position } = tempEmployee;
-
-      if (isEdit && email && name && age && position) {
-        axios
-          .patch(`http://localhost:8000/employee/edit/${_id}`, tempEmployee)
-          .then((res) => {
-            if (res) {
-              const tempSortedEmployee = sortedEmployee.map((item) => {
-                if (item._id === res.data._id) {
-                  return res.data;
-                }
-                return item;
-              });
-              setSortedEmployee(tempSortedEmployee);
-              dispatch(editEmployee(tempSortedEmployee));
-            }
-          })
-          .catch((err) => {
-            setSnackmessage("Edit employee error. Fill all required fields.");
-            setSnackbarOpen(true);
-          });
-      } else if (!isEdit && email && name && age && position) {
-        axios
-          .post("http://localhost:8000/employee/add", tempEmployee)
-          .then((res) => {
-            if (res) {
-              setSortedEmployee([...sortedEmployee, res.data.data]);
-              dispatch(createEmployee(res.data.data));
-            }
-          })
-          .catch((err) => {
-            setSnackmessage("Add employee error. Fill all required fields.");
-            setSnackbarOpen(true);
-          });
-      } else {
-        setSnackmessage("Error. Fill all required fields.");
-        setSnackbarOpen(true);
-      }
+    switch (entity) {
+      case "Department":
+        if (isEdit) {
+          axios
+            .patch(
+              `http://localhost:8000/department/edit/${entityObject._id}`,
+              entityObject
+            )
+            .then((res) => {
+              if (res) {
+                const editedDepartments = departments.map((item) => {
+                  if (item._id === res.data._id) {
+                    return res.data;
+                  }
+                  return item;
+                });
+                setDepartments(editedDepartments);
+                dispatch(editDepartment(editedDepartments));
+              }
+            })
+            .catch((err) => {
+              setSnackmessage(
+                "Edit department error. Name is required and must be unique."
+              );
+              setSnackbarOpen(true);
+            });
+        } else {
+          axios
+            .post("http://localhost:8000/department/add", entityObject)
+            .then((res) => {
+              if (res) {
+                setDepartments([...departments, res.data.data]);
+                dispatch(createDepartment(res.data.data));
+              }
+            })
+            .catch((err) => {
+              setSnackmessage(
+                "Add department error. Name is required and must be unique."
+              );
+              setSnackbarOpen(true);
+            });
+        }
+        break;
+      case "Employee":
+        const tempEmployee = { ...entityObject, department: id };
+        if (isEdit) {
+          axios
+            .patch(
+              `http://localhost:8000/employee/edit/${tempEmployee._id}`,
+              tempEmployee
+            )
+            .then((res) => {
+              if (res) {
+                const tempSortedEmployee = sortedEmployee.map((item) => {
+                  if (item._id === res.data._id) {
+                    return res.data;
+                  }
+                  return item;
+                });
+                setSortedEmployee(tempSortedEmployee);
+                dispatch(editEmployee(tempSortedEmployee));
+              }
+            })
+            .catch((err) => {
+              setSnackmessage("Edit employee error. Fill all required fields.");
+              setSnackbarOpen(true);
+            });
+        } else {
+          axios
+            .post("http://localhost:8000/employee/add", tempEmployee)
+            .then((res) => {
+              if (res) {
+                setSortedEmployee([...sortedEmployee, res.data.data]);
+                dispatch(createEmployee(res.data.data));
+              }
+            })
+            .catch((err) => {
+              setSnackmessage("Add employee error. Fill all required fields.");
+              setSnackbarOpen(true);
+            });
+        }
+        break;
+      default:
     }
     setOpenModal(false);
+    setFormObject(null);
     setIsEdit(false);
   };
 
@@ -207,6 +212,7 @@ const Main = ({ entity }) => {
             setSnackbarOpen(true);
           });
         break;
+      default:
     }
   };
 
@@ -233,26 +239,28 @@ const Main = ({ entity }) => {
             setSnackbarOpen={setSnackbarOpen}
           />
         </Container>
-        <ModalForm
-          openModal={openModal}
-          closeHandler={setOpenModal}
-          entity={entity}
-          isEdit={isEdit}
-          submitForm={submitForm}
-          formObject={formObject}
-          setFormObject={setFormObject}
-          setIsEdit={setIsEdit}
-        />
         <Snackbar
           anchorOrigin={{
             vertical: "top",
             horizontal: "center",
           }}
           open={isSnackbarOpen}
-          autoHideDuration={2000}
+          autoHideDuration={3000}
           onClose={() => setSnackbarOpen(false)}
           message={snackmessage}
         />
+        {formObject ? (
+          <ModalForm
+            openModal={openModal}
+            closeHandler={handleCloseModal}
+            entity={entity}
+            isEdit={isEdit}
+            submitForm={submitForm}
+            formObject={formObject}
+            setFormObject={setFormObject}
+            setIsEdit={setIsEdit}
+          />
+        ) : null}
       </Container>
     </>
   );
