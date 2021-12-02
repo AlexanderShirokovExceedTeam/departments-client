@@ -39,8 +39,8 @@ const Main = ({ entity }) => {
 
   const handleCloseModal = () => {
     setOpenModal(false);
-    setFormObject(null)
-  }
+    setFormObject(null);
+  };
 
   useEffect(() => {
     axios
@@ -157,62 +157,37 @@ const Main = ({ entity }) => {
     setIsEdit(false);
   };
 
+  const buttonAddHandler = () => {
+    setFormObject({});
+    setOpenModal(true);
+  };
+
   const deleteEntity = (entityObject, entityIndex) => {
-    // if (entity === "Department") {
-    //   axios
-    //     .delete(`http://localhost:8000/department/delete/${entityObject._id}`)
-    //     .then((res) => {
-    //       departments.splice(entityIndex, 1);
-    //       setDepartments([...departments]);
-    //       dispatch(deleteDepartment(entityObject._id));
-    //     })
-    //     .catch(() => {
-    //       setSnackmessage("Can not delete department with employee");
-    //       setSnackbarOpen(true);
-    //     });
-    // } else {
-    //   axios
-    //     .delete(`http://localhost:8000/employee/delete/${entityObject._id}`)
-    //     .then(() => {
-    //       const index = sortedEmployee.indexOf(entityObject);
-    //       sortedEmployee.splice(index, 1);
-    //       setSortedEmployee([...sortedEmployee]);
-    //       dispatch(deleteEmployee(entityObject._id));
-    //     })
-    //     .catch(() => {
-    //       setSnackmessage("Can not find deleted employee");
-    //       setSnackbarOpen(true);
-    //     });
-    // }
-    switch (entity) {
-      case "Department":
-        axios
-          .delete(`http://localhost:8000/department/delete/${entityObject._id}`)
-          .then((res) => {
-            departments.splice(entityIndex, 1);
-            setDepartments([...departments]);
-            dispatch(deleteDepartment(entityObject._id));
-          })
-          .catch(() => {
-            setSnackmessage("Can not delete department with employee");
-            setSnackbarOpen(true);
-          });
-        break;
-      case "Employee":
-        axios
-          .delete(`http://localhost:8000/employee/delete/${entityObject._id}`)
-          .then(() => {
-            const index = sortedEmployee.indexOf(entityObject);
-            sortedEmployee.splice(index, 1);
-            setSortedEmployee([...sortedEmployee]);
-            dispatch(deleteEmployee(entityObject._id));
-          })
-          .catch(() => {
-            setSnackmessage("Can not find deleted employee");
-            setSnackbarOpen(true);
-          });
-        break;
-      default:
+    if (entity === "Department") {
+      axios
+        .delete(`http://localhost:8000/department/delete/${entityObject._id}`)
+        .then((res) => {
+          departments.splice(entityIndex, 1);
+          setDepartments([...departments]);
+          dispatch(deleteDepartment(entityObject._id));
+        })
+        .catch(() => {
+          setSnackmessage("Can not delete department with employee");
+          setSnackbarOpen(true);
+        });
+    } else {
+      axios
+        .delete(`http://localhost:8000/employee/delete/${entityObject._id}`)
+        .then(() => {
+          const index = sortedEmployee.indexOf(entityObject);
+          sortedEmployee.splice(index, 1);
+          setSortedEmployee([...sortedEmployee]);
+          dispatch(deleteEmployee(entityObject._id));
+        })
+        .catch(() => {
+          setSnackmessage("Can not find deleted employee");
+          setSnackbarOpen(true);
+        });
     }
   };
 
@@ -224,7 +199,7 @@ const Main = ({ entity }) => {
       <Container className="main-container">
         <SideBar />
         <Container className="content">
-          <Header openModal={setOpenModal} entity={entity} />
+          <Header buttonAddHandler={buttonAddHandler} entity={entity} />
           <RenderEntity
             entity={entity}
             departments={departments}

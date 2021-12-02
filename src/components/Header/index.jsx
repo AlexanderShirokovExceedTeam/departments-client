@@ -4,14 +4,14 @@ import { Container, Typography, Button } from "@mui/material";
 
 import "./styles.scss";
 
-const Header = ({ openModal, entity }) => {
+const Header = ({ buttonAddHandler, entity }) => {
   return (
     <Container className="content-header">
       <Typography variant="h5">{entity}</Typography>
       <Button
         variant="contained"
         color="primary"
-        onClick={() => openModal(true)}
+        onClick={() => buttonAddHandler()}
       >
         Add
       </Button>

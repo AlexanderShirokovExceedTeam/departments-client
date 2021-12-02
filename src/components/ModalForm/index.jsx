@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 
 import {
   Button,
@@ -7,12 +7,11 @@ import {
   DialogContent,
   DialogTitle,
   Container,
-  TextField,
 } from "@mui/material";
 import * as yup from "yup";
 import { useFormik } from "formik";
 
-import UserTextField from "../UserTextField/index";
+import ModalTextField from "../ModalTextField/index";
 
 const validationSchemaDepartment = yup.object().shape({
   name: yup.string().required("Field is required"),
@@ -39,13 +38,7 @@ const ModalForm = ({
   const setFieldHandler = (e) => {
     setFormObject({ ...formObject, [e.target.name]: e.target.value });
   };
-
-  // useEffect(() => {
-  //   if (formObject?.name && formObject?.description) {
-  //     console.log(`exists`, )
-  //   }
-  // }, [formObject])
-  console.log(`formObject`, formObject)
+  
   const formikDepartment = useFormik({
     initialValues: {
       name: formObject.name,
@@ -53,7 +46,6 @@ const ModalForm = ({
     },
     validationSchema: validationSchemaDepartment,
     onSubmit: (values, actions) => {
-      console.log(`values department`, values);
       submitForm({
         _id: formObject._id,
         name: values.name,
@@ -67,8 +59,6 @@ const ModalForm = ({
     },
   });
 
-  console.log(`formObject`, formObject);
-
   const formikEmployee = useFormik({
     initialValues: {
       email: formObject.email,
@@ -78,7 +68,6 @@ const ModalForm = ({
     },
     validationSchema: validationSchemaEmployee,
     onSubmit: (values, actions) => {
-      console.log(`values`, values)
       submitForm({
         _id: formObject._id,
         email: values.email,
@@ -116,126 +105,44 @@ const ModalForm = ({
             <DialogContent>
               {entity === "Department" ? (
                 <Container component="form">
-                  <TextField
-                    fullWidth
-                    margin="dense"
-                    id="name"
-                    name="name"
+                  <ModalTextField
+                    currentKey="name"
                     label="Name"
                     defaultValue={formObject.name}
-                    value={formikDepartment.values.name}
-                    onChange={(e) => {
-                      formikDepartment.setFieldValue('name', e.target.value)
-                    }}
-                    error={
-                      formikDepartment.touched.name &&
-                      Boolean(formikDepartment.errors.name)
-                    }
-                    helperText={
-                      formikDepartment.touched.name &&
-                      formikDepartment.errors.name
-                    }
+                    formikValues={formikDepartment}
                   />
-                  <TextField
-                    fullWidth
-                    margin="dense"
-                    id="description"
-                    name="description"
+                  <ModalTextField
+                    currentKey="description"
                     label="Description"
                     defaultValue={formObject.description}
-                    value={formikDepartment.values.description}
-                    onChange={(e) => {
-                      formikDepartment.setFieldValue('description', e.target.value)
-                    }}
-                    error={
-                      formikDepartment.touched.description &&
-                      Boolean(formikDepartment.errors.description)
-                    }
-                    helperText={
-                      formikDepartment.touched.description &&
-                      formikDepartment.errors.description
-                    }
+                    formikValues={formikDepartment}
                   />
                 </Container>
               ) : (
                 <Container component="form">
-                  <TextField
-                    fullWidth
-                    margin="dense"
-                    id="email"
-                    name="email"
+                  <ModalTextField
+                    currentKey="email"
                     label="Email"
                     defaultValue={formObject.email}
-                    value={formikEmployee.values.email}
-                    onChange={(e) => {
-                      formikEmployee.setFieldValue('email', e.target.value)
-                    }}
-                    error={
-                      formikEmployee.touched.email &&
-                      Boolean(formikEmployee.errors.email)
-                    }
-                    helperText={
-                      formikEmployee.touched.email &&
-                      formikEmployee.errors.email
-                    }
+                    formikValues={formikEmployee}
                   />
-                  <TextField
-                    fullWidth
-                    margin="dense"
-                    id="name"
-                    name="name"
+                  <ModalTextField
+                    currentKey="name"
                     label="Name"
                     defaultValue={formObject.name}
-                    value={formikEmployee.values.name}
-                    onChange={(e) => {
-                      formikEmployee.setFieldValue('name', e.target.value)
-                    }}
-                    error={
-                      formikEmployee.touched.name &&
-                      Boolean(formikEmployee.errors.name)
-                    }
-                    helperText={
-                      formikEmployee.touched.name && formikEmployee.errors.name
-                    }
+                    formikValues={formikEmployee}
                   />
-                  <TextField
-                    fullWidth
-                    margin="dense"
-                    id="age"
-                    name="age"
+                  <ModalTextField
+                    currentKey="age"
                     label="Age"
                     defaultValue={formObject.age}
-                    value={formikEmployee.values.age}
-                    onChange={(e) => {
-                      formikEmployee.setFieldValue('age', e.target.value)
-                    }}
-                    error={
-                      formikEmployee.touched.age &&
-                      Boolean(formikEmployee.errors.age)
-                    }
-                    helperText={
-                      formikEmployee.touched.age && formikEmployee.errors.age
-                    }
+                    formikValues={formikEmployee}
                   />
-                  <TextField
-                    fullWidth
-                    margin="dense"
-                    id="position"
-                    name="position"
+                  <ModalTextField
+                    currentKey="position"
                     label="Position"
                     defaultValue={formObject.position}
-                    value={formikEmployee.values.position}
-                    onChange={(e) => {
-                      formikEmployee.setFieldValue('position', e.target.value)
-                    }}
-                    error={
-                      formikEmployee.touched.position &&
-                      Boolean(formikEmployee.errors.position)
-                    }
-                    helperText={
-                      formikEmployee.touched.position &&
-                      formikEmployee.errors.position
-                    }
+                    formikValues={formikEmployee}
                   />
                 </Container>
               )}
@@ -254,7 +161,6 @@ const ModalForm = ({
               </Button>
               <Button
                 type="submit"
-                // disabled={}
               >
                 {isEdit ? "Edit" : "Add"}
               </Button>
