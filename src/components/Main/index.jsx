@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 
-import axios from "axios";
 import { useDispatch } from "react-redux";
+
+import axios from "axios";
 
 import {
   getDepartments,
@@ -63,6 +64,7 @@ const Main = ({ entity }) => {
 
   const submitForm = (entityObject) => {
     setFormObject(entityObject);
+
     Object.keys(entityObject).map((key) => {
       if (typeof entityObject[key] === "string")
         entityObject[key] = entityObject[key].trim();
@@ -82,8 +84,10 @@ const Main = ({ entity }) => {
                   if (item._id === res.data._id) {
                     return res.data;
                   }
+
                   return item;
                 });
+
                 setDepartments(editedDepartments);
                 dispatch(editDepartment(editedDepartments));
               }
@@ -113,6 +117,7 @@ const Main = ({ entity }) => {
         break;
       case "Employee":
         const tempEmployee = { ...entityObject, department: id };
+
         if (isEdit) {
           axios
             .patch(
@@ -125,8 +130,10 @@ const Main = ({ entity }) => {
                   if (item._id === res.data._id) {
                     return res.data;
                   }
+
                   return item;
                 });
+
                 setSortedEmployee(tempSortedEmployee);
                 dispatch(editEmployee(tempSortedEmployee));
               }
@@ -167,6 +174,7 @@ const Main = ({ entity }) => {
         .delete(`http://localhost:8000/department/delete/${entityObject._id}`)
         .then((res) => {
           departments.splice(entityIndex, 1);
+
           setDepartments([...departments]);
           dispatch(deleteDepartment(entityObject._id));
         })
@@ -180,6 +188,7 @@ const Main = ({ entity }) => {
         .then(() => {
           const index = sortedEmployee.indexOf(entityObject);
           sortedEmployee.splice(index, 1);
+
           setSortedEmployee([...sortedEmployee]);
           dispatch(deleteEmployee(entityObject._id));
         })

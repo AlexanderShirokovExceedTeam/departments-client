@@ -1,15 +1,16 @@
 import React from "react";
 
+import { useFormik } from "formik";
+import * as yup from "yup";
+
 import {
   Button,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
-  Container,  
+  Container,
 } from "@mui/material";
-import * as yup from "yup";
-import { useFormik } from "formik";
 
 import ModalTextField from "../ModalTextField/index";
 
@@ -38,22 +39,26 @@ const ModalForm = ({
   const setFieldHandler = (e) => {
     setFormObject({ ...formObject, [e.target.name]: e.target.value });
   };
-  
+
   const formikDepartment = useFormik({
     initialValues: {
       name: formObject.name,
       description: formObject.description,
     },
+
     validationSchema: validationSchemaDepartment,
+
     onSubmit: (values, actions) => {
       submitForm({
         _id: formObject._id,
         name: values.name,
         description: values.description,
       });
+
       actions.resetForm();
       setFormObject(null);
     },
+
     onReset: () => {
       setFormObject(null);
     },
@@ -66,7 +71,9 @@ const ModalForm = ({
       age: formObject.age,
       position: formObject.position,
     },
+
     validationSchema: validationSchemaEmployee,
+
     onSubmit: (values, actions) => {
       submitForm({
         _id: formObject._id,
@@ -75,9 +82,11 @@ const ModalForm = ({
         age: values.age,
         position: values.position,
       });
+
       actions.resetForm();
       setFormObject(null);
     },
+
     onReset: () => {
       setFormObject(null);
     },
@@ -94,79 +103,75 @@ const ModalForm = ({
         {isEdit ? "Edit" : "Add"}{" "}
         {entity === "Employee" ? "employee" : "department"}
       </DialogTitle>
-          <form
-            onSubmit={
+      <form
+        onSubmit={
+          entity === "Department"
+            ? formikDepartment.handleSubmit
+            : formikEmployee.handleSubmit
+        }
+        onChange={(e) => setFieldHandler(e)}
+      >
+        <DialogContent>
+          {entity === "Department" ? (
+            <Container component="form">
+              <ModalTextField
+                currentKey="name"
+                label="Name"
+                defaultValue={formObject.name}
+                formikValues={formikDepartment}
+              />
+              <ModalTextField
+                currentKey="description"
+                label="Description"
+                defaultValue={formObject.description}
+                formikValues={formikDepartment}
+              />
+            </Container>
+          ) : (
+            <Container component="form">
+              <ModalTextField
+                currentKey="email"
+                label="Email"
+                defaultValue={formObject.email}
+                formikValues={formikEmployee}
+              />
+              <ModalTextField
+                currentKey="name"
+                label="Name"
+                defaultValue={formObject.name}
+                formikValues={formikEmployee}
+              />
+              <ModalTextField
+                currentKey="age"
+                label="Age"
+                defaultValue={formObject.age}
+                formikValues={formikEmployee}
+              />
+              <ModalTextField
+                currentKey="position"
+                label="Position"
+                defaultValue={formObject.position}
+                formikValues={formikEmployee}
+              />
+            </Container>
+          )}
+        </DialogContent>
+        <DialogActions>
+          <Button
+            onClick={() => {
+              closeHandler();
+              setIsEdit(false);
               entity === "Department"
-                ? formikDepartment.handleSubmit
-                : formikEmployee.handleSubmit
-            }
-            onChange={(e) => setFieldHandler(e)}
+                ? formikDepartment.handleReset()
+                : formikEmployee.handleReset();
+            }}
           >
-            <DialogContent>
-              {entity === "Department" ? (
-                <Container component="form">
-                  <ModalTextField
-                    currentKey="name"
-                    label="Name"
-                    defaultValue={formObject.name}
-                    formikValues={formikDepartment}
-                  />
-                  <ModalTextField
-                    currentKey="description"
-                    label="Description"
-                    defaultValue={formObject.description}
-                    formikValues={formikDepartment}
-                  />
-                </Container>
-              ) : (
-                <Container component="form">
-                  <ModalTextField
-                    currentKey="email"
-                    label="Email"
-                    defaultValue={formObject.email}
-                    formikValues={formikEmployee}
-                  />
-                  <ModalTextField
-                    currentKey="name"
-                    label="Name"
-                    defaultValue={formObject.name}
-                    formikValues={formikEmployee}
-                  />
-                  <ModalTextField
-                    currentKey="age"
-                    label="Age"
-                    defaultValue={formObject.age}
-                    formikValues={formikEmployee}
-                  />
-                  <ModalTextField
-                    currentKey="position"
-                    label="Position"
-                    defaultValue={formObject.position}
-                    formikValues={formikEmployee}
-                  />
-                </Container>
-              )}
-            </DialogContent>
-            <DialogActions>
-              <Button
-                onClick={() => {
-                  closeHandler();
-                  setIsEdit(false);
-                  entity === "Department"
-                    ? formikDepartment.handleReset()
-                    : formikEmployee.handleReset();
-                }}
-              >
-                Close
-              </Button>
-              <Button
-                type="submit"
-              >
-                {isEdit ? "Edit" : "Add"}
-              </Button>
-            </DialogActions>
-          </form>
-      </Dialog>
+            Close
+          </Button>
+          <Button type="submit">{isEdit ? "Edit" : "Add"}</Button>
+        </DialogActions>
+      </form>
+    </Dialog>
   );
 };
 

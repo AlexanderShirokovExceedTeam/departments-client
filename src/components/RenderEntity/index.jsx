@@ -1,8 +1,9 @@
 import React, { useEffect } from "react";
 import { useHistory } from "react-router-dom";
 
-import axios from "axios";
 import { useDispatch } from "react-redux";
+
+import axios from "axios";
 
 import { getEmployees } from "../../store/actions/employeesActions";
 
