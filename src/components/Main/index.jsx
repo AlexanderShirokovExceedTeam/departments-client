@@ -37,7 +37,7 @@ const Main = ({ entity }) => {
   let { id } = useParams();
   const dispatch = useDispatch();
 
-  const handleCloseModal = () => {
+  const closeModal = () => {
     setOpenModal(false);
     setFormObject(null);
   };
@@ -152,12 +152,11 @@ const Main = ({ entity }) => {
         break;
       default:
     }
-    setOpenModal(false);
-    setFormObject(null);
+    closeModal();
     setIsEdit(false);
   };
 
-  const buttonAddHandler = () => {
+  const createEntity = () => {
     setFormObject({});
     setOpenModal(true);
   };
@@ -199,7 +198,7 @@ const Main = ({ entity }) => {
       <Container className="main-container">
         <SideBar />
         <Container className="content">
-          <Header buttonAddHandler={buttonAddHandler} entity={entity} />
+          <Header createEntity={createEntity} entity={entity} />
           <RenderEntity
             entity={entity}
             departments={departments}
@@ -227,7 +226,7 @@ const Main = ({ entity }) => {
         {formObject ? (
           <ModalForm
             openModal={openModal}
-            closeHandler={handleCloseModal}
+            closeHandler={closeModal}
             entity={entity}
             isEdit={isEdit}
             submitForm={submitForm}
