@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import axios from "axios";
 
 import {
   getDepartments,
+  getDepartmentsAsync,
   createDepartment,
   editDepartment,
   deleteDepartment,
@@ -43,12 +44,17 @@ const Main = ({ entity }) => {
     setFormObject(null);
   };
 
+  const value = useSelector((store) => store.reducerDepartments.departments);
+  console.log(`value`, value);
+
   useEffect(() => {
+    dispatch(getDepartmentsAsync());
+
     axios
       .get("http://localhost:8000/departments")
       .then((res) => {
         setDepartments(res.data.data);
-        dispatch(getDepartments(res.data.data));
+        // dispatch(getDepartments(res.data.data));
       })
       .catch((err) => {
         setSnackmessage("Can not load departments");
