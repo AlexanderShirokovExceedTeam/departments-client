@@ -1,33 +1,29 @@
 import React from "react";
-import { Switch, Route, Redirect } from "react-router-dom";
+import { Switch, Route, Redirect, BrowserRouter as Router } from "react-router-dom";
 
-import MainContainer from "./components/mainContainer/mainContainer";
+import Main from "./components/Main/index";
 
-import { Container, Typography } from "@mui/material";
+import { Container } from "@mui/material";
+
 import "./App.scss";
 
 const App = () => {
   return (
-    <Container className="App">
-      <Typography className="header" variant="h1">
-        Department CMS
-      </Typography>
-      <Switch>
-        <Route
-          path="/departments"
-          render={() => <MainContainer entity="Department" />}
-        />
-        <Route
-          path="/department/:id"
-          render={() => <MainContainer entity="Employee" />}
-        />
-        <Route
-          path="/employee/all"
-          render={() => <MainContainer entity="Employee" />}
-        />
-        <Redirect from="/" to="departments" />
-      </Switch>
-    </Container>
+    <Router>
+      <Container className="App">
+        <Switch>
+          <Route
+            path="/departments"
+            render={() => <Main entity="Department" />}
+          />
+          <Route
+            path="/department/:id"
+            render={() => <Main entity="Employee" />}
+          />
+          <Redirect from="/" to="departments" />
+        </Switch>
+      </Container>
+    </Router>
   );
 };
 

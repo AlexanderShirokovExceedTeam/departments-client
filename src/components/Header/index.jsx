@@ -1,16 +1,17 @@
 import React from "react";
 
 import { Container, Typography, Button } from "@mui/material";
-import "./headerComponent.scss";
 
-const HeaderComponent = ({ openModal, entity }) => {
+import "./styles.scss";
+
+const Header = ({ createEntity, entity }) => {
   return (
     <Container className="content-header">
       <Typography variant="h5">{entity}</Typography>
       <Button
         variant="contained"
         color="primary"
-        onClick={() => openModal(true)}
+        onClick={() => createEntity()}
       >
         Add
       </Button>
@@ -18,4 +19,4 @@ const HeaderComponent = ({ openModal, entity }) => {
   );
 };
 
-export default HeaderComponent;
+export default Header;
