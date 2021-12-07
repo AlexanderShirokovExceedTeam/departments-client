@@ -6,13 +6,17 @@ import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 
 import {
-  getDepartments,
   getDepartmentsAsync,
+  createDepartmentAsync,
+  editDepartmentAsync,
+  deleteDepartmentAsync,
+  getDepartments,
   createDepartment,
   editDepartment,
   deleteDepartment,
 } from "../../store/actions/departmentsActions";
 import {
+  createEmployeeAsync,
   createEmployee,
   editEmployee,
   deleteEmployee,
@@ -44,22 +48,23 @@ const Main = ({ entity }) => {
     setFormObject(null);
   };
 
-  const value = useSelector((store) => store.reducerDepartments.departments);
-  console.log(`value`, value);
+  const departmentsAsync = useSelector(
+    (store) => store.reducerDepartments.departments
+  );
 
   useEffect(() => {
     dispatch(getDepartmentsAsync());
 
-    axios
-      .get("http://localhost:8000/departments")
-      .then((res) => {
-        setDepartments(res.data.data);
-        // dispatch(getDepartments(res.data.data));
-      })
-      .catch((err) => {
-        setSnackmessage("Can not load departments");
-        setSnackbarOpen(true);
-      });
+    // axios
+    //   .get("http://localhost:8000/departments")
+    //   .then((res) => {
+    //     setDepartments(res.data.data);
+    //     // dispatch(getDepartments(res.data.data));
+    //   })
+    //   .catch((err) => {
+    //     setSnackmessage("Can not load departments");
+    //     setSnackbarOpen(true);
+    //   });
   }, []);
 
   useEffect(() => {
@@ -79,46 +84,49 @@ const Main = ({ entity }) => {
     switch (entity) {
       case "Department":
         if (isEdit) {
-          axios
-            .patch(
-              `http://localhost:8000/department/edit/${entityObject._id}`,
-              entityObject
-            )
-            .then((res) => {
-              if (res) {
-                const editedDepartments = departments.map((item) => {
-                  if (item._id === res.data._id) {
-                    return res.data;
-                  }
+          dispatch(editDepartmentAsync(entityObject, departmentsAsync));
+          // axios
+          //   .patch(
+          //     `http://localhost:8000/department/edit/${entityObject._id}`,
+          //     entityObject
+          //   )
+          //   .then((res) => {
+          //     if (res) {
+          //       const editedDepartments = departments.map((item) => {
+          //         if (item._id === res.data._id) {
+          //           return res.data;
+          //         }
 
-                  return item;
-                });
+          //         return item;
+          //       });
 
-                setDepartments(editedDepartments);
-                dispatch(editDepartment(editedDepartments));
-              }
-            })
-            .catch((err) => {
-              setSnackmessage(
-                "Edit department error. Name is required and must be unique."
-              );
-              setSnackbarOpen(true);
-            });
+          //       setDepartments(editedDepartments);
+          //       dispatch(editDepartment(editedDepartments));
+          //     }
+          //   })
+          //   .catch((err) => {
+          //     setSnackmessage(
+          //       "Edit department error. Name is required and must be unique."
+          //     );
+          //     setSnackbarOpen(true);
+          //   });
         } else {
-          axios
-            .post("http://localhost:8000/department/add", entityObject)
-            .then((res) => {
-              if (res) {
-                setDepartments([...departments, res.data.data]);
-                dispatch(createDepartment(res.data.data));
-              }
-            })
-            .catch((err) => {
-              setSnackmessage(
-                "Add department error. Name is required and must be unique."
-              );
-              setSnackbarOpen(true);
-            });
+          dispatch(createDepartmentAsync(entityObject));
+
+          // axios
+          //   .post("http://localhost:8000/department/add", entityObject)
+          //   .then((res) => {
+          //     if (res) {
+          //       setDepartments([...departments, res.data.data]);
+          //       dispatch(createDepartment(res.data.data));
+          //     }
+          //   })
+          //   .catch((err) => {
+          //     setSnackmessage(
+          //       "Add department error. Name is required and must be unique."
+          //     );
+          //     setSnackbarOpen(true);
+          //   });
         }
         break;
       case "Employee":
@@ -149,18 +157,19 @@ const Main = ({ entity }) => {
               setSnackbarOpen(true);
             });
         } else {
-          axios
-            .post("http://localhost:8000/employee/add", tempEmployee)
-            .then((res) => {
-              if (res) {
-                setSortedEmployee([...sortedEmployee, res.data.data]);
-                dispatch(createEmployee(res.data.data));
-              }
-            })
-            .catch((err) => {
-              setSnackmessage("Add employee error. Fill all required fields.");
-              setSnackbarOpen(true);
-            });
+          dispatch(createEmployeeAsync(tempEmployee));
+          // axios
+          //   .post("http://localhost:8000/employee/add", tempEmployee)
+          //   .then((res) => {
+          //     if (res) {
+          //       setSortedEmployee([...sortedEmployee, res.data.data]);
+          //       dispatch(createEmployee(res.data.data));
+          //     }
+          //   })
+          //   .catch((err) => {
+          //     setSnackmessage("Add employee error. Fill all required fields.");
+          //     setSnackbarOpen(true);
+          //   });
         }
         break;
       default:
@@ -176,18 +185,19 @@ const Main = ({ entity }) => {
 
   const deleteEntity = (entityObject, entityIndex) => {
     if (entity === "Department") {
-      axios
-        .delete(`http://localhost:8000/department/delete/${entityObject._id}`)
-        .then((res) => {
-          departments.splice(entityIndex, 1);
+      dispatch(deleteDepartmentAsync(entityObject._id));
+      // axios
+      //   .delete(`http://localhost:8000/department/delete/${entityObject._id}`)
+      //   .then(() => {
+      //     departments.splice(entityIndex, 1);
 
-          setDepartments([...departments]);
-          dispatch(deleteDepartment(entityObject._id));
-        })
-        .catch(() => {
-          setSnackmessage("Can not delete department with employee");
-          setSnackbarOpen(true);
-        });
+      //     setDepartments([...departments]);
+      //     dispatch(deleteDepartment(entityObject._id));
+      //   })
+      //   .catch(() => {
+      //     setSnackmessage("Can not delete department with employee");
+      //     setSnackbarOpen(true);
+      //   });
     } else {
       axios
         .delete(`http://localhost:8000/employee/delete/${entityObject._id}`)
