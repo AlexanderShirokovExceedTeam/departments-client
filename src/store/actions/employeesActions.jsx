@@ -14,14 +14,11 @@ export const getEmployeesAsync = (currentDepartment) => {
       .get(`http://localhost:8000/employees/${currentDepartment}`)
       .then((res) => {
         if (res) {
-          // setSortedEmployee(res.data.data);
           dispatch(getEmployees(res.data.data));
         }
       })
       .catch((err) => {
         console.log(`err`, err);
-        // setSnackmessage("Can not load employee");
-        // setSnackbarOpen(true);
       });
   };
 };
@@ -39,14 +36,11 @@ export const createEmployeeAsync = (newEmployee) => {
       .post("http://localhost:8000/employee/add", newEmployee)
       .then((res) => {
         if (res) {
-          // setSortedEmployee([...sortedEmployee, res.data.data]);
           dispatch(createEmployee(res.data.data));
         }
       })
       .catch((err) => {
         console.log(`err`, err);
-        // setSnackmessage("Add employee error. Fill all required fields.");
-        // setSnackbarOpen(true);
       });
   };
 };
@@ -72,14 +66,11 @@ export const editEmployeeAsync = (employee, employees) => {
             return item;
           });
 
-          // setSortedEmployee(tempSortedEmployee);
           dispatch(editEmployee(tempSortedEmployee));
         }
       })
       .catch((err) => {
         console.log(`err`, err);
-        // setSnackmessage("Edit employee error. Fill all required fields.");
-        // setSnackbarOpen(true);
       });
   };
 };
@@ -96,16 +87,10 @@ export const deleteEmployeeAsync = (employeeId) => {
     axios
       .delete(`http://localhost:8000/employee/delete/${employeeId}`)
       .then(() => {
-        // const index = sortedEmployee.indexOf(entityObject);
-        // sortedEmployee.splice(index, 1);
-
-        // setSortedEmployee([...sortedEmployee]);
         dispatch(deleteEmployee(employeeId));
       })
       .catch((err) => {
         console.log(`err`, err);
-        // setSnackmessage("Can not find deleted employee");
-        // setSnackbarOpen(true);
       });
   };
 };

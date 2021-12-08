@@ -3,12 +3,7 @@ import { useHistory } from "react-router-dom";
 
 import { useDispatch, useSelector } from "react-redux";
 
-import axios from "axios";
-
-import {
-  getEmployees,
-  getEmployeesAsync,
-} from "../../store/actions/employeesActions";
+import { getEmployeesAsync } from "../../store/actions/employeesActions";
 
 import { Container, Typography, IconButton } from "@mui/material";
 import { Edit, Delete } from "@mui/icons-material";
@@ -17,14 +12,11 @@ import "./styles.scss";
 
 const RenderEntity = ({
   entity,
-  // departments,
   setIsEdit,
   openModal,
   setFormObject,
   deleteEntity,
   currentDepartment,
-  sortedEmployee,
-  setSortedEmployee,
   setSnackmessage,
   setSnackbarOpen,
 }) => {
@@ -40,18 +32,6 @@ const RenderEntity = ({
   useEffect(() => {
     if (currentDepartment) {
       dispatch(getEmployeesAsync(currentDepartment));
-      // axios
-      //   .get(`http://localhost:8000/employees/${currentDepartment}`)
-      //   .then((res) => {
-      //     if (res) {
-      //       setSortedEmployee(res.data.data);
-      //       dispatch(getEmployees(res.data.data));
-      //     }
-      //   })
-      //   .catch((err) => {
-      //     setSnackmessage("Can not load employee");
-      //     setSnackbarOpen(true);
-      //   });
     }
   }, [currentDepartment]);
 

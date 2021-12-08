@@ -13,13 +13,10 @@ export const getDepartmentsAsync = () => {
     axios
       .get("http://localhost:8000/departments")
       .then((res) => {
-        // console.log(`res.data.data =>>>`, res.data.data);
         dispatch(getDepartments(res.data.data));
       })
       .catch((err) => {
         console.log(`err`, err);
-        // setSnackmessage("Can not load departments");
-        // setSnackbarOpen(true);
       });
   };
 };
@@ -37,16 +34,11 @@ export const createDepartmentAsync = (newDepartment) => {
       .post("http://localhost:8000/department/add", newDepartment)
       .then((res) => {
         if (res) {
-          // setDepartments([...departments, res.data.data]);
           dispatch(createDepartment(res.data.data));
         }
       })
       .catch((err) => {
         console.log(`err`, err);
-        // setSnackmessage(
-        //   "Add department error. Name is required and must be unique."
-        // );
-        // setSnackbarOpen(true);
       });
   };
 };
@@ -77,16 +69,11 @@ export const editDepartmentAsync = (department, departments) => {
             return item;
           });
 
-          // setDepartments(editedDepartments);
           dispatch(editDepartment(editedDepartments));
         }
       })
       .catch((err) => {
         console.log(`err`, err);
-        // setSnackmessage(
-        //   "Edit department error. Name is required and must be unique."
-        // );
-        // setSnackbarOpen(true);
       });
   };
 };
@@ -103,15 +90,10 @@ export const deleteDepartmentAsync = (departmentId) => {
     axios
       .delete(`http://localhost:8000/department/delete/${departmentId}`)
       .then(() => {
-        // departments.splice(entityIndex, 1);
-
-        // setDepartments([...departments]);
         dispatch(deleteDepartment(departmentId));
       })
       .catch((err) => {
         console.log(`err`, err);
-        // setSnackmessage("Can not delete department with employee");
-        // setSnackbarOpen(true);
       });
   };
 };
