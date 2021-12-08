@@ -17,6 +17,8 @@ import {
 } from "../../store/actions/departmentsActions";
 import {
   createEmployeeAsync,
+  editEmployeeAsync,
+  deleteEmployeeAsync,
   createEmployee,
   editEmployee,
   deleteEmployee,
@@ -50,6 +52,10 @@ const Main = ({ entity }) => {
 
   const departmentsAsync = useSelector(
     (store) => store.reducerDepartments.departments
+  );
+
+  const employeeAsync = useSelector(
+    (store) => store.reducerEmployees.employees
   );
 
   useEffect(() => {
@@ -133,29 +139,28 @@ const Main = ({ entity }) => {
         const tempEmployee = { ...entityObject, department: id };
 
         if (isEdit) {
-          axios
-            .patch(
-              `http://localhost:8000/employee/edit/${tempEmployee._id}`,
-              tempEmployee
-            )
-            .then((res) => {
-              if (res) {
-                const tempSortedEmployee = sortedEmployee.map((item) => {
-                  if (item._id === res.data._id) {
-                    return res.data;
-                  }
-
-                  return item;
-                });
-
-                setSortedEmployee(tempSortedEmployee);
-                dispatch(editEmployee(tempSortedEmployee));
-              }
-            })
-            .catch((err) => {
-              setSnackmessage("Edit employee error. Fill all required fields.");
-              setSnackbarOpen(true);
-            });
+          dispatch(editEmployeeAsync(tempEmployee, employeeAsync));
+          // axios
+          //   .patch(
+          //     `http://localhost:8000/employee/edit/${tempEmployee._id}`,
+          //     tempEmployee
+          //   )
+          //   .then((res) => {
+          //     if (res) {
+          //       const tempSortedEmployee = sortedEmployee.map((item) => {
+          //         if (item._id === res.data._id) {
+          //           return res.data;
+          //         }
+          //         return item;
+          //       });
+          //       setSortedEmployee(tempSortedEmployee);
+          //       dispatch(editEmployee(tempSortedEmployee));
+          //     }
+          //   })
+          //   .catch((err) => {
+          //     setSnackmessage("Edit employee error. Fill all required fields.");
+          //     setSnackbarOpen(true);
+          //   });
         } else {
           dispatch(createEmployeeAsync(tempEmployee));
           // axios
@@ -199,19 +204,20 @@ const Main = ({ entity }) => {
       //     setSnackbarOpen(true);
       //   });
     } else {
-      axios
-        .delete(`http://localhost:8000/employee/delete/${entityObject._id}`)
-        .then(() => {
-          const index = sortedEmployee.indexOf(entityObject);
-          sortedEmployee.splice(index, 1);
+      dispatch(deleteEmployeeAsync(entityObject._id));
+      // axios
+      //   .delete(`http://localhost:8000/employee/delete/${entityObject._id}`)
+      //   .then(() => {
+      //     const index = sortedEmployee.indexOf(entityObject);
+      //     sortedEmployee.splice(index, 1);
 
-          setSortedEmployee([...sortedEmployee]);
-          dispatch(deleteEmployee(entityObject._id));
-        })
-        .catch(() => {
-          setSnackmessage("Can not find deleted employee");
-          setSnackbarOpen(true);
-        });
+      //     setSortedEmployee([...sortedEmployee]);
+      //     dispatch(deleteEmployee(entityObject._id));
+      //   })
+      //   .catch(() => {
+      //     setSnackmessage("Can not find deleted employee");
+      //     setSnackbarOpen(true);
+      //   });
     }
   };
 

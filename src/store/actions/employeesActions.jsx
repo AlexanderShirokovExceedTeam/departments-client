@@ -58,9 +58,54 @@ export const editEmployee = (employee) => {
   };
 };
 
+export const editEmployeeAsync = (employee, employees) => {
+  return (dispatch) => {
+    axios
+      .patch(`http://localhost:8000/employee/edit/${employee._id}`, employee)
+      .then((res) => {
+        if (res) {
+          const tempSortedEmployee = employees.map((item) => {
+            if (item._id === res.data._id) {
+              return res.data;
+            }
+
+            return item;
+          });
+
+          // setSortedEmployee(tempSortedEmployee);
+          dispatch(editEmployee(tempSortedEmployee));
+        }
+      })
+      .catch((err) => {
+        console.log(`err`, err);
+        // setSnackmessage("Edit employee error. Fill all required fields.");
+        // setSnackbarOpen(true);
+      });
+  };
+};
+
 export const deleteEmployee = (employeeId) => {
   return {
     type: types.DELETE_EMPLOYEE,
     payload: employeeId,
+  };
+};
+
+export const deleteEmployeeAsync = (employeeId) => {
+  return (dispatch) => {
+    axios
+      .delete(`http://localhost:8000/employee/delete/${employeeId}`)
+      .then(() => {
+        // const index = sortedEmployee.indexOf(entityObject);
+        // sortedEmployee.splice(index, 1);
+
+        // setSortedEmployee([...sortedEmployee]);
+        dispatch(deleteEmployee(employeeId));
+      })
+      .catch((err) => {
+        console.log(`err`, err);
+        // setSnackmessage("Can not find deleted employee");
+        // setSnackbarOpen(true);
+      });
   };
 };
