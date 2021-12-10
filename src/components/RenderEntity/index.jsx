@@ -69,7 +69,7 @@ const RenderEntity = ({
               <IconButton
                 type="Button"
                 onClick={(e) => {
-                  deleteEntity(item, index);
+                  deleteEntity(item);
                   e.stopPropagation();
                 }}
               >

@@ -11,7 +11,6 @@ const ModalTextField = ({ currentKey, label, defaultValue, formikValues }) => {
       name={currentKey}
       label={label}
       defaultValue={defaultValue}
-      // value={formikValues.values[currentKey]}
       onChange={(e) => {
         formikValues.setFieldValue(currentKey, e.target.value);
       }}

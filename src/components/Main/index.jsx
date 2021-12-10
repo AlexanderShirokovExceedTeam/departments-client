@@ -86,7 +86,7 @@ const Main = ({ entity }) => {
     setOpenModal(true);
   };
 
-  const deleteEntity = (entityObject, entityIndex) => {
+  const deleteEntity = (entityObject) => {
     if (entity === "Department") {
       dispatch(deleteDepartmentAsync(entityObject._id));
     } else {

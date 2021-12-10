@@ -1,6 +1,12 @@
 import axios from "axios";
 import { types } from "../types/departmentActionTypes";
 
+export const getDepartmentsStart = () => {
+  return {
+    type: types.GET_DEPARTMENTS_START,
+  };
+};
+
 export const getDepartments = (departments) => {
   return {
     type: types.GET_DEPARTMENTS,
@@ -8,15 +14,23 @@ export const getDepartments = (departments) => {
   };
 };
 
+export const getDepartmentsError = (error) => {
+  return {
+    type: types.GET_DEPARTMENTS_ERROR,
+    payload: error,
+  };
+};
+
 export const getDepartmentsAsync = () => {
   return (dispatch) => {
+    dispatch(getDepartmentsStart());
     axios
       .get("http://localhost:8000/departments")
       .then((res) => {
         dispatch(getDepartments(res.data.data));
       })
       .catch((err) => {
-        console.log(`err`, err);
+        dispatch(getDepartmentsError(err));
       });
   };
 };
