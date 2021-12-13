@@ -1,8 +1,16 @@
-import React from "react";
+import React, { FC } from "react";
 
 import { TextField } from "@mui/material";
 
-const ModalTextField = ({ currentKey, label, defaultValue, formikValues }) => {
+interface IProps {
+  currentKey: string,
+  label: string,
+  defaultValue: string,
+  formikValues: Array,
+}
+
+const ModalTextField: FC<IProps> = ({ currentKey, label, defaultValue, formikValues }) => {
+// const ModalTextField = ({ currentKey, label, defaultValue, formikValues }) => {
   return (
     <TextField
       fullWidth
