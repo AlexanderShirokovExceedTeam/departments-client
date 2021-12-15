@@ -2,15 +2,31 @@ import { types } from "../types/departmentActionTypes";
 
 const initialState = {
   departments: [],
+  loading: false,
+  error: null,
 };
 
 export const reducerDepartments = (state = initialState, action) => {
   switch (action.type) {
+    case types.GET_DEPARTMENTS_START:
+      return {
+        ...state,
+        loading: true,
+      };
     case types.GET_DEPARTMENTS:
       return {
         ...state,
-        departments: action.payload,
+        loading: false,
+        error: null,
+        departments: action.payload, //  action.payload.departments
       };
+    case types.GET_DEPARTMENTS_ERROR:
+      return {
+        ...state,
+        loading: false,
+        error: action.payload.error,
+      };
+    //
     case types.ADD_DEPARTMENT:
       return {
         ...state,

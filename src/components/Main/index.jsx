@@ -1,20 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 
-import { useDispatch } from "react-redux";
-
-import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
 
 import {
-  getDepartments,
-  createDepartment,
-  editDepartment,
-  deleteDepartment,
+  getDepartmentsAsync,
+  createDepartmentAsync,
+  editDepartmentAsync,
+  deleteDepartmentAsync,
 } from "../../store/actions/departmentsActions";
 import {
-  createEmployee,
-  editEmployee,
-  deleteEmployee,
+  createEmployeeAsync,
+  editEmployeeAsync,
+  deleteEmployeeAsync,
 } from "../../store/actions/employeesActions";
 
 import SideBar from "../SideBar/index";
@@ -29,9 +27,7 @@ import "./styles.scss";
 const Main = ({ entity }) => {
   const [openModal, setOpenModal] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
-  const [departments, setDepartments] = useState([]);
   const [formObject, setFormObject] = useState(null);
-  const [sortedEmployee, setSortedEmployee] = useState([]);
   const [isSnackbarOpen, setSnackbarOpen] = useState(false);
   const [snackmessage, setSnackmessage] = useState("");
 
@@ -43,124 +39,46 @@ const Main = ({ entity }) => {
     setFormObject(null);
   };
 
+  const departmentsAsync = useSelector(
+    (store) => store.reducerDepartments.departments
+  );
+
+  const employeeAsync = useSelector(
+    (store) => store.reducerEmployees.employees
+  );
+
   useEffect(() => {
-    axios
-      .get("http://localhost:8000/departments")
-      .then((res) => {
-        setDepartments(res.data.data);
-        dispatch(getDepartments(res.data.data));
-      })
-      .catch((err) => {
-        setSnackmessage("Can not load departments");
-        setSnackbarOpen(true);
-      });
+    dispatch(getDepartmentsAsync());
   }, []);
 
-  useEffect(() => {
-    if (entity === "Department") {
-      setSortedEmployee([]);
-    }
-  }, [entity]);
-
   const submitForm = (entityObject) => {
-    setFormObject(entityObject);
-
-    Object.keys(entityObject).map((key) => {
-      if (typeof entityObject[key] === "string")
-        entityObject[key] = entityObject[key].trim();
+    Object.keys(entityObject).forEach((key) => {
+      if (typeof entityObject[key] === "string") {
+        return (entityObject[key] = entityObject[key].trim());
+      }
     });
 
     switch (entity) {
       case "Department":
         if (isEdit) {
-          axios
-            .patch(
-              `http://localhost:8000/department/edit/${entityObject._id}`,
-              entityObject
-            )
-            .then((res) => {
-              if (res) {
-                const editedDepartments = departments.map((item) => {
-                  if (item._id === res.data._id) {
-                    return res.data;
-                  }
-
-                  return item;
-                });
-
-                setDepartments(editedDepartments);
-                dispatch(editDepartment(editedDepartments));
-              }
-            })
-            .catch((err) => {
-              setSnackmessage(
-                "Edit department error. Name is required and must be unique."
-              );
-              setSnackbarOpen(true);
-            });
+          dispatch(editDepartmentAsync(entityObject, departmentsAsync));
         } else {
-          axios
-            .post("http://localhost:8000/department/add", entityObject)
-            .then((res) => {
-              if (res) {
-                setDepartments([...departments, res.data.data]);
-                dispatch(createDepartment(res.data.data));
-              }
-            })
-            .catch((err) => {
-              setSnackmessage(
-                "Add department error. Name is required and must be unique."
-              );
-              setSnackbarOpen(true);
-            });
+          dispatch(createDepartmentAsync(entityObject));
         }
         break;
       case "Employee":
         const tempEmployee = { ...entityObject, department: id };
 
         if (isEdit) {
-          axios
-            .patch(
-              `http://localhost:8000/employee/edit/${tempEmployee._id}`,
-              tempEmployee
-            )
-            .then((res) => {
-              if (res) {
-                const tempSortedEmployee = sortedEmployee.map((item) => {
-                  if (item._id === res.data._id) {
-                    return res.data;
-                  }
-
-                  return item;
-                });
-
-                setSortedEmployee(tempSortedEmployee);
-                dispatch(editEmployee(tempSortedEmployee));
-              }
-            })
-            .catch((err) => {
-              setSnackmessage("Edit employee error. Fill all required fields.");
-              setSnackbarOpen(true);
-            });
+          dispatch(editEmployeeAsync(tempEmployee, employeeAsync));
         } else {
-          axios
-            .post("http://localhost:8000/employee/add", tempEmployee)
-            .then((res) => {
-              if (res) {
-                setSortedEmployee([...sortedEmployee, res.data.data]);
-                dispatch(createEmployee(res.data.data));
-              }
-            })
-            .catch((err) => {
-              setSnackmessage("Add employee error. Fill all required fields.");
-              setSnackbarOpen(true);
-            });
+          dispatch(createEmployeeAsync(tempEmployee));
         }
         break;
       default:
     }
-    closeModal();
     setIsEdit(false);
+    closeModal();
   };
 
   const createEntity = () => {
@@ -168,34 +86,11 @@ const Main = ({ entity }) => {
     setOpenModal(true);
   };
 
-  const deleteEntity = (entityObject, entityIndex) => {
+  const deleteEntity = (entityObject) => {
     if (entity === "Department") {
-      axios
-        .delete(`http://localhost:8000/department/delete/${entityObject._id}`)
-        .then((res) => {
-          departments.splice(entityIndex, 1);
-
-          setDepartments([...departments]);
-          dispatch(deleteDepartment(entityObject._id));
-        })
-        .catch(() => {
-          setSnackmessage("Can not delete department with employee");
-          setSnackbarOpen(true);
-        });
+      dispatch(deleteDepartmentAsync(entityObject._id));
     } else {
-      axios
-        .delete(`http://localhost:8000/employee/delete/${entityObject._id}`)
-        .then(() => {
-          const index = sortedEmployee.indexOf(entityObject);
-          sortedEmployee.splice(index, 1);
-
-          setSortedEmployee([...sortedEmployee]);
-          dispatch(deleteEmployee(entityObject._id));
-        })
-        .catch(() => {
-          setSnackmessage("Can not find deleted employee");
-          setSnackbarOpen(true);
-        });
+      dispatch(deleteEmployeeAsync(entityObject._id));
     }
   };
 
@@ -210,14 +105,11 @@ const Main = ({ entity }) => {
           <Header createEntity={createEntity} entity={entity} />
           <RenderEntity
             entity={entity}
-            departments={departments}
             openModal={setOpenModal}
             setIsEdit={setIsEdit}
             setFormObject={setFormObject}
             deleteEntity={deleteEntity}
             currentDepartment={id}
-            sortedEmployee={sortedEmployee}
-            setSortedEmployee={setSortedEmployee}
             setSnackmessage={setSnackmessage}
             setSnackbarOpen={setSnackbarOpen}
           />
@@ -240,7 +132,6 @@ const Main = ({ entity }) => {
             isEdit={isEdit}
             submitForm={submitForm}
             formObject={formObject}
-            setFormObject={setFormObject}
             setIsEdit={setIsEdit}
           />
         ) : null}

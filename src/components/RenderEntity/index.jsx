@@ -1,11 +1,9 @@
 import React, { useEffect } from "react";
 import { useHistory } from "react-router-dom";
 
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
-import axios from "axios";
-
-import { getEmployees } from "../../store/actions/employeesActions";
+import { getEmployeesAsync } from "../../store/actions/employeesActions";
 
 import { Container, Typography, IconButton } from "@mui/material";
 import { Edit, Delete } from "@mui/icons-material";
@@ -14,34 +12,26 @@ import "./styles.scss";
 
 const RenderEntity = ({
   entity,
-  departments,
   setIsEdit,
   openModal,
   setFormObject,
   deleteEntity,
   currentDepartment,
-  sortedEmployee,
-  setSortedEmployee,
   setSnackmessage,
   setSnackbarOpen,
 }) => {
   const history = useHistory();
   const dispatch = useDispatch();
 
+  const departments = useSelector(
+    (store) => store.reducerDepartments.departments
+  );
+
+  const employee = useSelector((store) => store.reducerEmployees.employees);
+
   useEffect(() => {
     if (currentDepartment) {
-      axios
-        .get(`http://localhost:8000/employees/${currentDepartment}`)
-        .then((res) => {
-          if (res) {
-            setSortedEmployee(res.data.data);
-            dispatch(getEmployees(res.data.data));
-          }
-        })
-        .catch((err) => {
-          setSnackmessage("Can not load employee");
-          setSnackbarOpen(true);
-        });
+      dispatch(getEmployeesAsync(currentDepartment));
     }
   }, [currentDepartment]);
 
@@ -79,7 +69,7 @@ const RenderEntity = ({
               <IconButton
                 type="Button"
                 onClick={(e) => {
-                  deleteEntity(item, index);
+                  deleteEntity(item);
                   e.stopPropagation();
                 }}
               >
@@ -88,8 +78,8 @@ const RenderEntity = ({
             </Container>
           );
         })
-      ) : sortedEmployee.length > 0 ? (
-        sortedEmployee.map((item, index) => {
+      ) : employee.length > 0 ? (
+        employee.map((item, index) => {
           return (
             <Container
               key={`empl-prop-${index}`}

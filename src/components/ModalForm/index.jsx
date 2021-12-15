@@ -33,13 +33,8 @@ const ModalForm = ({
   entity,
   isEdit,
   formObject,
-  setFormObject,
   setIsEdit,
 }) => {
-  const setFieldHandler = (e) => {
-    setFormObject({ ...formObject, [e.target.name]: e.target.value });
-  };
-
   const formikDepartment = useFormik({
     initialValues: {
       name: formObject.name,
@@ -48,19 +43,12 @@ const ModalForm = ({
 
     validationSchema: validationSchemaDepartment,
 
-    onSubmit: (values, actions) => {
+    onSubmit: (values) => {
       submitForm({
         _id: formObject._id,
         name: values.name,
         description: values.description,
       });
-
-      actions.resetForm();
-      setFormObject(null);
-    },
-
-    onReset: () => {
-      setFormObject(null);
     },
   });
 
@@ -74,7 +62,7 @@ const ModalForm = ({
 
     validationSchema: validationSchemaEmployee,
 
-    onSubmit: (values, actions) => {
+    onSubmit: (values) => {
       submitForm({
         _id: formObject._id,
         email: values.email,
@@ -82,13 +70,6 @@ const ModalForm = ({
         age: values.age,
         position: values.position,
       });
-
-      actions.resetForm();
-      setFormObject(null);
-    },
-
-    onReset: () => {
-      setFormObject(null);
     },
   });
 
@@ -109,11 +90,10 @@ const ModalForm = ({
             ? formikDepartment.handleSubmit
             : formikEmployee.handleSubmit
         }
-        onChange={(e) => setFieldHandler(e)}
       >
         <DialogContent>
           {entity === "Department" ? (
-            <Container component="form">
+            <Container>
               <ModalTextField
                 currentKey="name"
                 label="Name"
@@ -128,7 +108,7 @@ const ModalForm = ({
               />
             </Container>
           ) : (
-            <Container component="form">
+            <Container>
               <ModalTextField
                 currentKey="email"
                 label="Email"
