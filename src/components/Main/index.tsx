@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, FC } from "react";
 import { useParams } from "react-router-dom";
 
 import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../../store/index";
 
 import {
   getDepartmentsAsync,
@@ -20,18 +21,32 @@ import Header from "../Header/index";
 import RenderEntity from "../RenderEntity/index";
 import ModalForm from "../ModalForm/index";
 
+import { IDepartment, IEmployee } from "../../types";
+
 import { Container, Snackbar, Typography } from "@mui/material";
 
 import "./styles.scss";
 
-const Main = ({ entity }) => {
+interface IMainProps {
+  entity: string
+}
+
+interface IEntityObject {
+  name: string,
+  description?: string,
+  email?: string,
+  age?: number,
+  position?: string,
+}
+
+const Main: FC<IMainProps> = ({ entity }) => {
   const [openModal, setOpenModal] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
   const [formObject, setFormObject] = useState(null);
   const [isSnackbarOpen, setSnackbarOpen] = useState(false);
   const [snackmessage, setSnackmessage] = useState("");
 
-  let { id } = useParams();
+  let { id } = useParams<{ id: string }>();
   const dispatch = useDispatch();
 
   const closeModal = () => {
@@ -40,18 +55,18 @@ const Main = ({ entity }) => {
   };
 
   const departmentsAsync = useSelector(
-    (store) => store.reducerDepartments.departments
+    (store: RootState) => store.reducerDepartments.departments
   );
 
   const employeeAsync = useSelector(
-    (store) => store.reducerEmployees.employees
+    (store: RootState) => store.reducerEmployees.employees
   );
 
   useEffect(() => {
     dispatch(getDepartmentsAsync());
   }, []);
 
-  const submitForm = (entityObject) => {
+  const submitForm = (entityObject: IEntityObject) => {
     Object.keys(entityObject).forEach((key) => {
       if (typeof entityObject[key] === "string") {
         return (entityObject[key] = entityObject[key].trim());

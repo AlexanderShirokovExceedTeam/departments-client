@@ -6,13 +6,11 @@ interface IProps {
   currentKey: string,
   label: string,
   defaultValue: string,
-  formikValues: any,
+  formikValues: any,  //  have a question about this
 }
 
 const ModalTextField: FC<IProps> = ({ currentKey, label, defaultValue, formikValues }) => {
 // const ModalTextField = ({ currentKey, label, defaultValue, formikValues }) => {
-  console.log(`formikValues`, formikValues);
-  console.log(typeof formikValues)
   return (
     <TextField
       fullWidth

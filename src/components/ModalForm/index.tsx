@@ -45,6 +45,18 @@ const ModalForm: FC<IModalFormProps> = ({
   formObject,
   setIsEdit
 }) => {
+  interface departmentValues {
+    name: string,
+    description: string
+  }
+
+  interface employeeValues {
+    email: string,
+    name: string,
+    age: number,
+    position: string,
+  }
+
   const formikDepartment = useFormik({
     initialValues: {
       name: formObject.name,
@@ -53,7 +65,7 @@ const ModalForm: FC<IModalFormProps> = ({
 
     validationSchema: validationSchemaDepartment,
 
-    onSubmit: (values) => {
+    onSubmit: (values: departmentValues) => {
       submitForm({
         _id: formObject._id,
         name: values.name,
@@ -72,7 +84,7 @@ const ModalForm: FC<IModalFormProps> = ({
 
     validationSchema: validationSchemaEmployee,
 
-    onSubmit: (values) => {
+    onSubmit: (values: employeeValues) => {
       submitForm({
         _id: formObject._id,
         email: values.email,
