@@ -13,6 +13,8 @@ import {
 } from "@mui/material";
 
 import ModalTextField from "../ModalTextField/index";
+import { IDepartment, IEmployee } from "../../types";
+import { AnyObject } from "yup/lib/object";
 
 const validationSchemaDepartment = yup.object().shape({
   name: yup.string().required("Field is required"),
@@ -29,10 +31,10 @@ const validationSchemaEmployee = yup.object().shape({
 interface IModalFormProps {
   openModal: boolean,
   closeHandler: () => void,
-  submitForm:  ({}) => void,
+  submitForm:  any,
   entity: string,
   isEdit: boolean,
-  formObject: any,
+  formObject: any,  //  
   setIsEdit:  (isEdit: boolean) => void
 }
 
@@ -45,17 +47,6 @@ const ModalForm: FC<IModalFormProps> = ({
   formObject,
   setIsEdit
 }) => {
-  interface departmentValues {
-    name: string,
-    description: string
-  }
-
-  interface employeeValues {
-    email: string,
-    name: string,
-    age: number,
-    position: string,
-  }
 
   const formikDepartment = useFormik({
     initialValues: {
@@ -65,7 +56,7 @@ const ModalForm: FC<IModalFormProps> = ({
 
     validationSchema: validationSchemaDepartment,
 
-    onSubmit: (values: departmentValues) => {
+    onSubmit: (values: IDepartment) => {
       submitForm({
         _id: formObject._id,
         name: values.name,
@@ -84,7 +75,7 @@ const ModalForm: FC<IModalFormProps> = ({
 
     validationSchema: validationSchemaEmployee,
 
-    onSubmit: (values: employeeValues) => {
+    onSubmit: (values: IEmployee) => {
       submitForm({
         _id: formObject._id,
         email: values.email,

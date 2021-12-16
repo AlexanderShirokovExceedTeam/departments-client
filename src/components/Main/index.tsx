@@ -42,7 +42,7 @@ interface IEntityObject {
 const Main: FC<IMainProps> = ({ entity }) => {
   const [openModal, setOpenModal] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
-  const [formObject, setFormObject] = useState(null);
+  const [formObject, setFormObject] = useState<any>(null);
   const [isSnackbarOpen, setSnackbarOpen] = useState(false);
   const [snackmessage, setSnackmessage] = useState("");
 
@@ -66,7 +66,7 @@ const Main: FC<IMainProps> = ({ entity }) => {
     dispatch(getDepartmentsAsync());
   }, []);
 
-  const submitForm = (entityObject: IEntityObject) => {
+  const submitForm = (entityObject: any) => {
     Object.keys(entityObject).forEach((key) => {
       if (typeof entityObject[key] === "string") {
         return (entityObject[key] = entityObject[key].trim());
@@ -101,7 +101,7 @@ const Main: FC<IMainProps> = ({ entity }) => {
     setOpenModal(true);
   };
 
-  const deleteEntity = (entityObject) => {
+  const deleteEntity = (entityObject: IDepartment | IEmployee) => {
     if (entity === "Department") {
       dispatch(deleteDepartmentAsync(entityObject._id));
     } else {
