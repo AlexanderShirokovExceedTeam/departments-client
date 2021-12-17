@@ -1,11 +1,11 @@
 export interface IDepartment {
-  _id?: string;
+  _id: string;
   name: string,
   description?: string,
 }
 
 export interface IEmployee {
-  _id?: string;
+  _id: string;
   email: string,
   name: string,
   age: number,
