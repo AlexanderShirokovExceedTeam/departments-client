@@ -54,7 +54,7 @@ const RenderEntity: FC<IRenderEntityProps> = ({
     setFormObject(editedItem);
   };
 
-  const filterHandler = (departmentId: string) => {
+  const filterHandler = (departmentId: string | undefined) => {
     history.push(`/department/${departmentId}`);
   };
 
@@ -71,7 +71,6 @@ const RenderEntity: FC<IRenderEntityProps> = ({
               <Typography>{item.name}</Typography>
               <Typography>{item.description}</Typography>
               <IconButton
-                type="Button"
                 onClick={(e) => {
                   handleEdit(item);
                   e.stopPropagation();
@@ -80,7 +79,6 @@ const RenderEntity: FC<IRenderEntityProps> = ({
                 <Edit />
               </IconButton>
               <IconButton
-                type="Button"
                 onClick={(e) => {
                   deleteEntity(item);
                   e.stopPropagation();
@@ -102,11 +100,11 @@ const RenderEntity: FC<IRenderEntityProps> = ({
               <Typography>{item.name}</Typography>
               <Typography>{item.age}</Typography>
               <Typography>{item.position}</Typography>
-              <IconButton type="Button" onClick={(e) => handleEdit(item)}>
+              <IconButton
+                onClick={(e) => handleEdit(item)}>
                 <Edit />
               </IconButton>
               <IconButton
-                type="Button"
                 onClick={(e) => deleteEntity(item, index)}
               >
                 <Delete />

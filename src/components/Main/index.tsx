@@ -125,8 +125,8 @@ const Main: FC<IMainProps> = ({ entity }) => {
             setFormObject={setFormObject}
             deleteEntity={deleteEntity}
             currentDepartment={id}
-            setSnackmessage={setSnackmessage}
-            setSnackbarOpen={setSnackbarOpen}
+            // setSnackmessage={setSnackmessage}
+            // setSnackbarOpen={setSnackbarOpen}
           />
         </Container>
         <Snackbar
