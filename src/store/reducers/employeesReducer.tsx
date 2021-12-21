@@ -4,7 +4,7 @@ const initialState = {
   employees: [],
 };
 
-export const reducerEmployees = (state = initialState, action) => {
+export const reducerEmployees = (state = initialState, action: any) => {
   switch (action.type) {
     case types.GET_EMPLOYEES:
       return {
@@ -25,7 +25,7 @@ export const reducerEmployees = (state = initialState, action) => {
       return {
         ...state,
         employees: state.employees.filter(
-          (employee) => employee._id !== action.payload
+          (employee: any) => employee._id !== action.payload
         ),
       };
     default:

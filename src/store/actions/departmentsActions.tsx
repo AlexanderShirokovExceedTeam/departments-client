@@ -1,5 +1,6 @@
 import axios from "axios";
 import { types } from "../types/departmentActionTypes";
+import { IDepartment } from "../../types"
 
 export const getDepartmentsStart = () => {
   return {
@@ -7,14 +8,14 @@ export const getDepartmentsStart = () => {
   };
 };
 
-export const getDepartments = (departments) => {
+export const getDepartments = (departments: any) => {
   return {
     type: types.GET_DEPARTMENTS,
     payload: departments,
   };
 };
 
-export const getDepartmentsError = (error) => {
+export const getDepartmentsError = (error: any) => {
   return {
     type: types.GET_DEPARTMENTS_ERROR,
     payload: error,
@@ -22,7 +23,7 @@ export const getDepartmentsError = (error) => {
 };
 
 export const getDepartmentsAsync = () => {
-  return (dispatch) => {
+  return (dispatch: Function) => {
     dispatch(getDepartmentsStart());
     axios
       .get("http://localhost:8000/departments")
@@ -35,15 +36,15 @@ export const getDepartmentsAsync = () => {
   };
 };
 
-export const createDepartment = (newDepartment) => {
+export const createDepartment = (newDepartment: IDepartment) => {
   return {
     type: types.ADD_DEPARTMENT,
     payload: newDepartment,
   };
 };
 
-export const createDepartmentAsync = (newDepartment) => {
-  return (dispatch) => {
+export const createDepartmentAsync = (newDepartment: IDepartment) => {
+  return (dispatch: Function) => {
     axios
       .post("http://localhost:8000/department/add", newDepartment)
       .then((res) => {
@@ -57,16 +58,16 @@ export const createDepartmentAsync = (newDepartment) => {
   };
 };
 
-export const editDepartment = (department) => {
+export const editDepartment = (department: IDepartment) => {
   return {
     type: types.EDIT_DEPARTMENT,
     payload: department,
   };
 };
 
-export const editDepartmentAsync = (department, departments) => {
+export const editDepartmentAsync = (department: IDepartment, departments: any) => {
   console.log(`department`, department);
-  return (dispatch) => {
+  return (dispatch: Function) => {
     axios
       .patch(
         `http://localhost:8000/department/edit/${department._id}`,
@@ -75,7 +76,7 @@ export const editDepartmentAsync = (department, departments) => {
       .then((res) => {
         if (res) {
           console.log(`res.data ===>>>`, res.data);
-          const editedDepartments = departments.map((item) => {
+          const editedDepartments = departments.map((item: IDepartment) => {
             if (item._id === res.data._id) {
               return res.data;
             }
@@ -92,15 +93,15 @@ export const editDepartmentAsync = (department, departments) => {
   };
 };
 
-export const deleteDepartment = (departmentId) => {
+export const deleteDepartment = (departmentId: string) => {
   return {
     type: types.DELETE_DEPARTMENT,
     payload: departmentId,
   };
 };
 
-export const deleteDepartmentAsync = (departmentId) => {
-  return (dispatch) => {
+export const deleteDepartmentAsync = (departmentId: any) => {
+  return (dispatch: Function) => {
     axios
       .delete(`http://localhost:8000/department/delete/${departmentId}`)
       .then(() => {

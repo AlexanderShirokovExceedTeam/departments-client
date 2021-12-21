@@ -6,7 +6,7 @@ const initialState = {
   error: null,
 };
 
-export const reducerDepartments = (state = initialState, action) => {
+export const reducerDepartments = (state = initialState, action: any) => {
   switch (action.type) {
     case types.GET_DEPARTMENTS_START:
       return {
@@ -41,7 +41,7 @@ export const reducerDepartments = (state = initialState, action) => {
       return {
         ...state,
         departments: state.departments.filter(
-          (department) => department._id !== action.payload
+          (department : any) => department._id !== action.payload
         ),
       };
     default:
