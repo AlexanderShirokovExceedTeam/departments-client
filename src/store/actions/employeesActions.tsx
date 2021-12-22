@@ -2,20 +2,20 @@ import axios from "axios";
 import { types } from "../types/employeeActionTypes";
 import { IDepartment, IEmployee } from "../../types"
 
-export const getEmployees = (employees: any) => {
+export const getEmployeesSuccess = (employees: any) => {
   return {
-    type: types.GET_EMPLOYEES,
+    type: types.GET_EMPLOYEES_SUCCESS,
     payload: employees,
   };
 };
 
-export const getEmployeesAsync = (currentDepartment: string) => {
+export const getEmployees = (currentDepartment: string) => {
   return (dispatch: Function) => {
     axios
       .get(`http://localhost:8000/employees/${currentDepartment}`)
       .then((res) => {
         if (res) {
-          dispatch(getEmployees(res.data.data));
+          dispatch(getEmployeesSuccess(res.data.data));
         }
       })
       .catch((err) => {
@@ -24,20 +24,20 @@ export const getEmployeesAsync = (currentDepartment: string) => {
   };
 };
 
-export const createEmployee = (newEmployee: IEmployee) => {
+export const createEmployeeSuccess = (newEmployee: IEmployee) => {
   return {
-    type: types.ADD_EMPLOYEE,
+    type: types.ADD_EMPLOYEE_SUCCESS,
     payload: newEmployee,
   };
 };
 
-export const createEmployeeAsync = (newEmployee: IEmployee) => {
+export const createEmployee = (newEmployee: IEmployee) => {
   return (dispatch: Function) => {
     axios
       .post("http://localhost:8000/employee/add", newEmployee)
       .then((res) => {
         if (res) {
-          dispatch(createEmployee(res.data.data));
+          dispatch(createEmployeeSuccess(res.data.data));
         }
       })
       .catch((err) => {
@@ -46,14 +46,14 @@ export const createEmployeeAsync = (newEmployee: IEmployee) => {
   };
 };
 
-export const editEmployee = (employee: IEmployee) => {
+export const editEmployeeSuccess = (employee: IEmployee) => {
   return {
-    type: types.EDIT_EMPLOYEE,
+    type: types.EDIT_EMPLOYEE_SUCCESS,
     payload: employee,
   };
 };
 
-export const editEmployeeAsync = (employee: IEmployee, employees: any) => {
+export const editEmployee = (employee: IEmployee, employees: any) => {
   return (dispatch: Function) => {
     axios
       .patch(`http://localhost:8000/employee/edit/${employee._id}`, employee)
@@ -67,7 +67,7 @@ export const editEmployeeAsync = (employee: IEmployee, employees: any) => {
             return item;
           });
 
-          dispatch(editEmployee(tempSortedEmployee));
+          dispatch(editEmployeeSuccess(tempSortedEmployee));
         }
       })
       .catch((err) => {
@@ -76,19 +76,19 @@ export const editEmployeeAsync = (employee: IEmployee, employees: any) => {
   };
 };
 
-export const deleteEmployee = (employeeId: string) => {
+export const deleteEmployeeSuccess = (employeeId: string) => {
   return {
-    type: types.DELETE_EMPLOYEE,
+    type: types.DELETE_EMPLOYEE_SUCCESS,
     payload: employeeId,
   };
 };
 
-export const deleteEmployeeAsync = (employeeId: any) => {
+export const deleteEmployee = (employeeId: any) => {
   return (dispatch: Function) => {
     axios
       .delete(`http://localhost:8000/employee/delete/${employeeId}`)
       .then(() => {
-        dispatch(deleteEmployee(employeeId));
+        dispatch(deleteEmployeeSuccess(employeeId));
       })
       .catch((err) => {
         console.log(`err`, err);

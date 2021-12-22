@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../store";
 import { IDepartment, IEmployee } from "../../types";
 
-import { getEmployeesAsync } from "../../store/actions/employeesActions";
+import { getEmployees } from "../../store/actions/employeesActions";
 
 import { Container, Typography, IconButton } from "@mui/material";
 import { Edit, Delete } from "@mui/icons-material";
@@ -44,7 +44,7 @@ const RenderEntity: FC<IRenderEntityProps> = ({
 
   useEffect(() => {
     if (currentDepartment) {
-      dispatch(getEmployeesAsync(currentDepartment));
+      dispatch(getEmployees(currentDepartment));
     }
   }, [currentDepartment]);
 

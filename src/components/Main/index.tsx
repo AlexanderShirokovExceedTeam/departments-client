@@ -5,15 +5,15 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../store/index";
 
 import {
-  getDepartmentsAsync,
-  createDepartmentAsync,
-  editDepartmentAsync,
-  deleteDepartmentAsync,
+  getDepartments,
+  createDepartment,
+  editDepartment,
+  deleteDepartment,
 } from "../../store/actions/departmentsActions";
 import {
-  createEmployeeAsync,
-  editEmployeeAsync,
-  deleteEmployeeAsync,
+  createEmployee,
+  editEmployee,
+  deleteEmployee,
 } from "../../store/actions/employeesActions";
 
 import SideBar from "../SideBar/index";
@@ -63,7 +63,7 @@ const Main: FC<IMainProps> = ({ entity }) => {
   );
 
   useEffect(() => {
-    dispatch(getDepartmentsAsync());
+    dispatch(getDepartments());
   }, []);
 
   const submitForm = (entityObject: any) => {
@@ -76,18 +76,18 @@ const Main: FC<IMainProps> = ({ entity }) => {
     switch (entity) {
       case "Department":
         if (isEdit) {
-          dispatch(editDepartmentAsync(entityObject, departmentsAsync));
+          dispatch(editDepartment(entityObject, departmentsAsync));
         } else {
-          dispatch(createDepartmentAsync(entityObject));
+          dispatch(createDepartment(entityObject));
         }
         break;
       case "Employee":
         const tempEmployee = { ...entityObject, department: id };
 
         if (isEdit) {
-          dispatch(editEmployeeAsync(tempEmployee, employeeAsync));
+          dispatch(editEmployee(tempEmployee, employeeAsync));
         } else {
-          dispatch(createEmployeeAsync(tempEmployee));
+          dispatch(createEmployee(tempEmployee));
         }
         break;
       default:
@@ -103,9 +103,9 @@ const Main: FC<IMainProps> = ({ entity }) => {
 
   const deleteEntity = (entityObject: IDepartment | IEmployee) => {
     if (entity === "Department") {
-      dispatch(deleteDepartmentAsync(entityObject._id));
+      dispatch(deleteDepartment(entityObject._id));
     } else {
-      dispatch(deleteEmployeeAsync(entityObject._id));
+      dispatch(deleteEmployee(entityObject._id));
     }
   };
 

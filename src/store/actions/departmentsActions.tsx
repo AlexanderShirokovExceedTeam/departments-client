@@ -2,15 +2,31 @@ import axios from "axios";
 import { types } from "../types/departmentActionTypes";
 import { IDepartment } from "../../types"
 
+
+
+export const actionStart = (str: string) => {
+  return {
+    // type: types.ACTION_START,
+    // type: types[`${str}_START`],
+  }
+}
+
+// export const actionError = (error: any) => {
+//   return {
+//     type: types.ACTION_ERROR,
+//     payload: error,
+//   }
+// }
+
 export const getDepartmentsStart = () => {
   return {
     type: types.GET_DEPARTMENTS_START,
   };
 };
 
-export const getDepartments = (departments: any) => {
+export const getDepartmentsSuccess = (departments: any) => {
   return {
-    type: types.GET_DEPARTMENTS,
+    type: types.GET_DEPARTMENTS_SUCCESS,
     payload: departments,
   };
 };
@@ -22,13 +38,13 @@ export const getDepartmentsError = (error: any) => {
   };
 };
 
-export const getDepartmentsAsync = () => {
+export const getDepartments = () => {
   return (dispatch: Function) => {
     dispatch(getDepartmentsStart());
     axios
       .get("http://localhost:8000/departments")
       .then((res) => {
-        dispatch(getDepartments(res.data.data));
+        dispatch(getDepartmentsSuccess(res.data.data));
       })
       .catch((err) => {
         dispatch(getDepartmentsError(err));
@@ -36,36 +52,51 @@ export const getDepartmentsAsync = () => {
   };
 };
 
-export const createDepartment = (newDepartment: IDepartment) => {
+export const createDepartmentStart = () => {
   return {
-    type: types.ADD_DEPARTMENT,
+    type: types.GET_DEPARTMENTS_START,
+  };
+}
+
+export const createDepartmentSuccess = (newDepartment: IDepartment) => {
+  return {
+    type: types.ADD_DEPARTMENT_SUCCESS,
     payload: newDepartment,
   };
 };
 
-export const createDepartmentAsync = (newDepartment: IDepartment) => {
+export const createDepartmentsError = (error: any) => {
+  return {
+    type: types.GET_DEPARTMENTS_ERROR,
+    payload: error,
+  };
+}
+
+export const createDepartment = (newDepartment: IDepartment) => {
   return (dispatch: Function) => {
+    dispatch(createDepartmentStart());
     axios
       .post("http://localhost:8000/department/add", newDepartment)
       .then((res) => {
         if (res) {
-          dispatch(createDepartment(res.data.data));
+          dispatch(createDepartmentSuccess(res.data.data));
         }
       })
       .catch((err) => {
         console.log(`err`, err);
+        dispatch(createDepartmentsError(err));
       });
   };
 };
 
-export const editDepartment = (department: IDepartment) => {
+export const editDepartmentSuccess = (department: IDepartment) => {
   return {
-    type: types.EDIT_DEPARTMENT,
+    type: types.EDIT_DEPARTMENT_SUCCESS,
     payload: department,
   };
 };
 
-export const editDepartmentAsync = (department: IDepartment, departments: any) => {
+export const editDepartment = (department: IDepartment, departments: any) => {
   console.log(`department`, department);
   return (dispatch: Function) => {
     axios
@@ -84,7 +115,7 @@ export const editDepartmentAsync = (department: IDepartment, departments: any) =
             return item;
           });
 
-          dispatch(editDepartment(editedDepartments));
+          dispatch(editDepartmentSuccess(editedDepartments));
         }
       })
       .catch((err) => {
@@ -93,19 +124,19 @@ export const editDepartmentAsync = (department: IDepartment, departments: any) =
   };
 };
 
-export const deleteDepartment = (departmentId: string) => {
+export const deleteDepartmentSuccess = (departmentId: string) => {
   return {
-    type: types.DELETE_DEPARTMENT,
+    type: types.DELETE_DEPARTMENT_SUCCESS,
     payload: departmentId,
   };
 };
 
-export const deleteDepartmentAsync = (departmentId: any) => {
+export const deleteDepartment = (departmentId: any) => {
   return (dispatch: Function) => {
     axios
       .delete(`http://localhost:8000/department/delete/${departmentId}`)
       .then(() => {
-        dispatch(deleteDepartment(departmentId));
+        dispatch(deleteDepartmentSuccess(departmentId));
       })
       .catch((err) => {
         console.log(`err`, err);
