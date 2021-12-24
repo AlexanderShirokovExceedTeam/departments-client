@@ -9,16 +9,17 @@ import { getEmployees } from "../../store/actions/employeesActions";
 
 import { Container, Typography, IconButton } from "@mui/material";
 import { Edit, Delete } from "@mui/icons-material";
+import withLoader from "../WithLoader";
 
 import "./styles.scss";
 
 interface IRenderEntityProps {
-  entity: string,
-  setIsEdit: any,
-  openModal: any, 
-  setFormObject: any,
-  deleteEntity: any,
-  currentDepartment: string,
+  entity: string;
+  setIsEdit: any;
+  openModal: any;
+  setFormObject: any;
+  deleteEntity: any;
+  currentDepartment: string;
   // setSnackmessage: any,
   // setSnackbarOpen: any,
 }
@@ -36,11 +37,28 @@ const RenderEntity: FC<IRenderEntityProps> = ({
   const history = useHistory();
   const dispatch = useDispatch();
 
+  console.log(
+    `entity,
+  setIsEdit,
+  openModal,
+  setFormObject,
+  deleteEntity,
+  currentDepartment,`,
+    entity,
+    setIsEdit,
+    openModal,
+    setFormObject,
+    deleteEntity,
+    currentDepartment
+  );
+
   const departments = useSelector(
     (store: RootState) => store.reducerDepartments.departments
   );
 
-  const employee = useSelector((store: RootState) => store.reducerEmployees.employees);
+  const employee = useSelector(
+    (store: RootState) => store.reducerEmployees.employees
+  );
 
   useEffect(() => {
     if (currentDepartment) {
@@ -89,7 +107,7 @@ const RenderEntity: FC<IRenderEntityProps> = ({
             </Container>
           );
         })
-      ) : employee.length > 0 ? (
+      ) : employee.length ? (
         employee.map((item: IEmployee, index: number) => {
           return (
             <Container
@@ -100,13 +118,10 @@ const RenderEntity: FC<IRenderEntityProps> = ({
               <Typography>{item.name}</Typography>
               <Typography>{item.age}</Typography>
               <Typography>{item.position}</Typography>
-              <IconButton
-                onClick={(e) => handleEdit(item)}>
+              <IconButton onClick={(e) => handleEdit(item)}>
                 <Edit />
               </IconButton>
-              <IconButton
-                onClick={(e) => deleteEntity(item, index)}
-              >
+              <IconButton onClick={(e) => deleteEntity(item, index)}>
                 <Delete />
               </IconButton>
             </Container>
@@ -123,4 +138,4 @@ const RenderEntity: FC<IRenderEntityProps> = ({
   );
 };
 
-export default RenderEntity;
+export default withLoader(RenderEntity);

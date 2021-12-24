@@ -2,27 +2,18 @@ import axios from "axios";
 import { types } from "../types/departmentActionTypes";
 import { IDepartment } from "../../types"
 
-
-
-export const actionStart = (str: string) => {
+export const fetchDataStart = () => {
   return {
-    // type: types.ACTION_START,
-    // type: types[`${str}_START`],
+    type: types.FETCH_DATA_START,
   }
 }
 
-// export const actionError = (error: any) => {
-//   return {
-//     type: types.ACTION_ERROR,
-//     payload: error,
-//   }
-// }
-
-export const getDepartmentsStart = () => {
+export const fetchDataError = (error: any) => {
   return {
-    type: types.GET_DEPARTMENTS_START,
-  };
-};
+    type: types.FETCH_DATA_ERROR,
+    payload: error,
+  }
+}
 
 export const getDepartmentsSuccess = (departments: any) => {
   return {
@@ -31,32 +22,19 @@ export const getDepartmentsSuccess = (departments: any) => {
   };
 };
 
-export const getDepartmentsError = (error: any) => {
-  return {
-    type: types.GET_DEPARTMENTS_ERROR,
-    payload: error,
-  };
-};
-
 export const getDepartments = () => {
   return (dispatch: Function) => {
-    dispatch(getDepartmentsStart());
+    dispatch(fetchDataStart());
     axios
       .get("http://localhost:8000/departments")
       .then((res) => {
         dispatch(getDepartmentsSuccess(res.data.data));
       })
       .catch((err) => {
-        dispatch(getDepartmentsError(err));
+        dispatch(fetchDataError(err));
       });
   };
 };
-
-export const createDepartmentStart = () => {
-  return {
-    type: types.GET_DEPARTMENTS_START,
-  };
-}
 
 export const createDepartmentSuccess = (newDepartment: IDepartment) => {
   return {
@@ -65,16 +43,9 @@ export const createDepartmentSuccess = (newDepartment: IDepartment) => {
   };
 };
 
-export const createDepartmentsError = (error: any) => {
-  return {
-    type: types.GET_DEPARTMENTS_ERROR,
-    payload: error,
-  };
-}
-
 export const createDepartment = (newDepartment: IDepartment) => {
   return (dispatch: Function) => {
-    dispatch(createDepartmentStart());
+    dispatch(fetchDataStart());
     axios
       .post("http://localhost:8000/department/add", newDepartment)
       .then((res) => {
@@ -84,7 +55,7 @@ export const createDepartment = (newDepartment: IDepartment) => {
       })
       .catch((err) => {
         console.log(`err`, err);
-        dispatch(createDepartmentsError(err));
+        dispatch(fetchDataError(err));
       });
   };
 };
@@ -97,8 +68,8 @@ export const editDepartmentSuccess = (department: IDepartment) => {
 };
 
 export const editDepartment = (department: IDepartment, departments: any) => {
-  console.log(`department`, department);
   return (dispatch: Function) => {
+    dispatch(fetchDataStart());
     axios
       .patch(
         `http://localhost:8000/department/edit/${department._id}`,
@@ -120,6 +91,7 @@ export const editDepartment = (department: IDepartment, departments: any) => {
       })
       .catch((err) => {
         console.log(`err`, err);
+        dispatch(fetchDataError(err));
       });
   };
 };
@@ -133,6 +105,7 @@ export const deleteDepartmentSuccess = (departmentId: string) => {
 
 export const deleteDepartment = (departmentId: any) => {
   return (dispatch: Function) => {
+    dispatch(fetchDataStart());
     axios
       .delete(`http://localhost:8000/department/delete/${departmentId}`)
       .then(() => {
@@ -140,6 +113,7 @@ export const deleteDepartment = (departmentId: any) => {
       })
       .catch((err) => {
         console.log(`err`, err);
+        dispatch(fetchDataError(err));
       });
   };
 };

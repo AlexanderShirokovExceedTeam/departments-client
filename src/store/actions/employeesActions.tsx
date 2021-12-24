@@ -2,6 +2,19 @@ import axios from "axios";
 import { types } from "../types/employeeActionTypes";
 import { IDepartment, IEmployee } from "../../types"
 
+export const fetchDataStart = () => {
+  return {
+    type: types.FETCH_DATA_START,
+  }
+}
+
+export const fetchDataError = (error: any) => {
+  return {
+    type: types.FETCH_DATA_ERROR,
+    payload: error,
+  }
+}
+
 export const getEmployeesSuccess = (employees: any) => {
   return {
     type: types.GET_EMPLOYEES_SUCCESS,
@@ -11,6 +24,7 @@ export const getEmployeesSuccess = (employees: any) => {
 
 export const getEmployees = (currentDepartment: string) => {
   return (dispatch: Function) => {
+    dispatch(fetchDataStart());
     axios
       .get(`http://localhost:8000/employees/${currentDepartment}`)
       .then((res) => {
@@ -20,6 +34,7 @@ export const getEmployees = (currentDepartment: string) => {
       })
       .catch((err) => {
         console.log(`err`, err);
+        dispatch(fetchDataError(err));
       });
   };
 };
@@ -33,6 +48,7 @@ export const createEmployeeSuccess = (newEmployee: IEmployee) => {
 
 export const createEmployee = (newEmployee: IEmployee) => {
   return (dispatch: Function) => {
+    dispatch(fetchDataStart());
     axios
       .post("http://localhost:8000/employee/add", newEmployee)
       .then((res) => {
@@ -42,6 +58,7 @@ export const createEmployee = (newEmployee: IEmployee) => {
       })
       .catch((err) => {
         console.log(`err`, err);
+        dispatch(fetchDataError(err));
       });
   };
 };
@@ -55,6 +72,7 @@ export const editEmployeeSuccess = (employee: IEmployee) => {
 
 export const editEmployee = (employee: IEmployee, employees: any) => {
   return (dispatch: Function) => {
+    dispatch(fetchDataStart());
     axios
       .patch(`http://localhost:8000/employee/edit/${employee._id}`, employee)
       .then((res) => {
@@ -72,6 +90,7 @@ export const editEmployee = (employee: IEmployee, employees: any) => {
       })
       .catch((err) => {
         console.log(`err`, err);
+        dispatch(fetchDataError(err));
       });
   };
 };
@@ -85,6 +104,7 @@ export const deleteEmployeeSuccess = (employeeId: string) => {
 
 export const deleteEmployee = (employeeId: any) => {
   return (dispatch: Function) => {
+    dispatch(fetchDataStart());
     axios
       .delete(`http://localhost:8000/employee/delete/${employeeId}`)
       .then(() => {
@@ -92,6 +112,7 @@ export const deleteEmployee = (employeeId: any) => {
       })
       .catch((err) => {
         console.log(`err`, err);
+        dispatch(fetchDataError(err));
       });
   };
 };

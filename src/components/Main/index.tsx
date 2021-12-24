@@ -28,15 +28,15 @@ import { Container, Snackbar, Typography } from "@mui/material";
 import "./styles.scss";
 
 interface IMainProps {
-  entity: string
+  entity: string;
 }
 
 interface IEntityObject {
-  name: string,
-  description?: string,
-  email?: string,
-  age?: number,
-  position?: string,
+  name: string;
+  description?: string;
+  email?: string;
+  age?: number;
+  position?: string;
 }
 
 const Main: FC<IMainProps> = ({ entity }) => {
