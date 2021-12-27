@@ -37,21 +37,6 @@ const RenderEntity: FC<IRenderEntityProps> = ({
   const history = useHistory();
   const dispatch = useDispatch();
 
-  console.log(
-    `entity,
-  setIsEdit,
-  openModal,
-  setFormObject,
-  deleteEntity,
-  currentDepartment,`,
-    entity,
-    setIsEdit,
-    openModal,
-    setFormObject,
-    deleteEntity,
-    currentDepartment
-  );
-
   const departments = useSelector(
     (store: RootState) => store.reducerDepartments.departments
   );

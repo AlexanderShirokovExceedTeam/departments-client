@@ -42,7 +42,9 @@ interface IEntityObject {
 const Main: FC<IMainProps> = ({ entity }) => {
   const [openModal, setOpenModal] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
-  const [formObject, setFormObject] = useState<any>(null);
+  const [formObject, setFormObject] = useState<IDepartment | IEmployee | null>(
+    null
+  );
   const [isSnackbarOpen, setSnackbarOpen] = useState(false);
   const [snackmessage, setSnackmessage] = useState("");
 
@@ -66,7 +68,7 @@ const Main: FC<IMainProps> = ({ entity }) => {
     dispatch(getDepartments());
   }, []);
 
-  const submitForm = (entityObject: any) => {
+  const submitForm = (entityObject: IDepartment | IEmployee) => {
     Object.keys(entityObject).forEach((key) => {
       if (typeof entityObject[key] === "string") {
         return (entityObject[key] = entityObject[key].trim());
@@ -82,7 +84,10 @@ const Main: FC<IMainProps> = ({ entity }) => {
         }
         break;
       case "Employee":
-        const tempEmployee = { ...entityObject, department: id };
+        const tempEmployee: IDepartment | IEmployee = {
+          ...entityObject,
+          department: id,
+        };
 
         if (isEdit) {
           dispatch(editEmployee(tempEmployee, employeeAsync));
