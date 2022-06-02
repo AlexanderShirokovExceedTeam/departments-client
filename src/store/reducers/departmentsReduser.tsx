@@ -6,42 +6,43 @@ const initialState = {
   error: null,
 };
 
-export const reducerDepartments = (state = initialState, action) => {
+export const reducerDepartments = (state = initialState, action: any) => {
   switch (action.type) {
-    case types.GET_DEPARTMENTS_START:
+    case types.FETCH_DATA_START:
       return {
         ...state,
         loading: true,
       };
-    case types.GET_DEPARTMENTS:
-      return {
-        ...state,
-        loading: false,
-        error: null,
-        departments: action.payload, //  action.payload.departments
-      };
-    case types.GET_DEPARTMENTS_ERROR:
+    case types.FETCH_DATA_ERROR:
       return {
         ...state,
         loading: false,
         error: action.payload.error,
       };
-    //
-    case types.ADD_DEPARTMENT:
+    case types.GET_DEPARTMENTS_SUCCESS:
       return {
         ...state,
+        loading: false,
+        departments: action.payload, //  action.payload.departments
+      };
+    case types.ADD_DEPARTMENT_SUCCESS:
+      return {
+        ...state,
+        loading: false,
         departments: [...state.departments, action.payload],
       };
-    case types.EDIT_DEPARTMENT:
+    case types.EDIT_DEPARTMENT_SUCCESS:
       return {
         ...state,
+        loading: false,
         departments: [...action.payload],
       };
-    case types.DELETE_DEPARTMENT:
+    case types.DELETE_DEPARTMENT_SUCCESS:
       return {
         ...state,
+        loading: false,
         departments: state.departments.filter(
-          (department) => department._id !== action.payload
+          (department: any) => department._id !== action.payload
         ),
       };
     default:

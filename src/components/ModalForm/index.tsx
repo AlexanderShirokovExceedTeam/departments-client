@@ -1,4 +1,4 @@
-import React from "react";
+import React, { FC } from "react";
 
 import { useFormik } from "formik";
 import * as yup from "yup";
@@ -13,6 +13,7 @@ import {
 } from "@mui/material";
 
 import ModalTextField from "../ModalTextField/index";
+import { IDepartment, IEmployee } from "../../types";
 
 const validationSchemaDepartment = yup.object().shape({
   name: yup.string().required("Field is required"),
@@ -26,7 +27,17 @@ const validationSchemaEmployee = yup.object().shape({
   position: yup.string().required("Field is required"),
 });
 
-const ModalForm = ({
+interface IModalFormProps {
+  openModal: boolean;
+  closeHandler: () => void;
+  submitForm: any;
+  entity: string;
+  isEdit: boolean;
+  formObject: any; //  IDepartment & IEmployee,
+  setIsEdit: (isEdit: boolean) => void;
+}
+
+const ModalForm: FC<IModalFormProps> = ({
   openModal,
   closeHandler,
   submitForm,
@@ -43,7 +54,7 @@ const ModalForm = ({
 
     validationSchema: validationSchemaDepartment,
 
-    onSubmit: (values) => {
+    onSubmit: (values: IDepartment) => {
       submitForm({
         _id: formObject._id,
         name: values.name,
@@ -62,7 +73,7 @@ const ModalForm = ({
 
     validationSchema: validationSchemaEmployee,
 
-    onSubmit: (values) => {
+    onSubmit: (values: IEmployee) => {
       submitForm({
         _id: formObject._id,
         email: values.email,
@@ -138,12 +149,12 @@ const ModalForm = ({
         </DialogContent>
         <DialogActions>
           <Button
-            onClick={() => {
+            onClick={(e) => {
               closeHandler();
               setIsEdit(false);
               entity === "Department"
-                ? formikDepartment.handleReset()
-                : formikEmployee.handleReset();
+                ? formikDepartment.handleReset(e)
+                : formikEmployee.handleReset(e);
             }}
           >
             Close

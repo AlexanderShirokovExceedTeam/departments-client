@@ -1,54 +1,70 @@
-import React, { useEffect } from "react";
+import React, { useEffect, FC } from "react";
 import { useHistory } from "react-router-dom";
 
 import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../../store";
+import { IDepartment, IEmployee } from "../../types";
 
-import { getEmployeesAsync } from "../../store/actions/employeesActions";
+import { getEmployees } from "../../store/actions/employeesActions";
 
 import { Container, Typography, IconButton } from "@mui/material";
 import { Edit, Delete } from "@mui/icons-material";
+import withLoader from "../WithLoader";
 
 import "./styles.scss";
 
-const RenderEntity = ({
+interface IRenderEntityProps {
+  entity: string;
+  setIsEdit: any;
+  openModal: any;
+  setFormObject: any;
+  deleteEntity: any;
+  currentDepartment: string;
+  // setSnackmessage: any,
+  // setSnackbarOpen: any,
+}
+
+const RenderEntity: FC<IRenderEntityProps> = ({
   entity,
   setIsEdit,
   openModal,
   setFormObject,
   deleteEntity,
   currentDepartment,
-  setSnackmessage,
-  setSnackbarOpen,
+  // setSnackmessage,
+  // setSnackbarOpen,
 }) => {
   const history = useHistory();
   const dispatch = useDispatch();
 
   const departments = useSelector(
-    (store) => store.reducerDepartments.departments
+    (store: RootState) => store.reducerDepartments.departments
   );
 
-  const employee = useSelector((store) => store.reducerEmployees.employees);
+  const employee = useSelector(
+    (store: RootState) => store.reducerEmployees.employees
+  );
 
   useEffect(() => {
     if (currentDepartment) {
-      dispatch(getEmployeesAsync(currentDepartment));
+      dispatch(getEmployees(currentDepartment));
     }
   }, [currentDepartment]);
 
-  const handleEdit = (editedItem) => {
+  const handleEdit = (editedItem: any) => {
     setIsEdit(true);
     openModal(true);
     setFormObject(editedItem);
   };
 
-  const filterHandler = (departmentId) => {
+  const filterHandler = (departmentId: string | undefined) => {
     history.push(`/department/${departmentId}`);
   };
 
   return (
     <Container className="render-entity">
       {entity === "Department" ? (
-        departments.map((item, index) => {
+        departments.map((item: IDepartment, index: number) => {
           return (
             <Container
               key={`dep-prop-${index}`}
@@ -58,7 +74,6 @@ const RenderEntity = ({
               <Typography>{item.name}</Typography>
               <Typography>{item.description}</Typography>
               <IconButton
-                type="Button"
                 onClick={(e) => {
                   handleEdit(item);
                   e.stopPropagation();
@@ -67,7 +82,6 @@ const RenderEntity = ({
                 <Edit />
               </IconButton>
               <IconButton
-                type="Button"
                 onClick={(e) => {
                   deleteEntity(item);
                   e.stopPropagation();
@@ -78,8 +92,8 @@ const RenderEntity = ({
             </Container>
           );
         })
-      ) : employee.length > 0 ? (
-        employee.map((item, index) => {
+      ) : employee.length ? (
+        employee.map((item: IEmployee, index: number) => {
           return (
             <Container
               key={`empl-prop-${index}`}
@@ -89,13 +103,10 @@ const RenderEntity = ({
               <Typography>{item.name}</Typography>
               <Typography>{item.age}</Typography>
               <Typography>{item.position}</Typography>
-              <IconButton type="Button" onClick={() => handleEdit(item)}>
+              <IconButton onClick={(e) => handleEdit(item)}>
                 <Edit />
               </IconButton>
-              <IconButton
-                type="Button"
-                onClick={() => deleteEntity(item, index)}
-              >
+              <IconButton onClick={(e) => deleteEntity(item, index)}>
                 <Delete />
               </IconButton>
             </Container>
@@ -112,4 +123,4 @@ const RenderEntity = ({
   );
 };
 
-export default RenderEntity;
+export default withLoader(RenderEntity);
